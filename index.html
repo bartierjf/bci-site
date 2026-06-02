@@ -1746,6 +1746,69 @@ body {
 
 .lead-form { display: flex; flex-direction: column; }
 
+/* === V15 : bloc état de succès après soumission du formulaire === */
+.lead-success {
+  display: none;
+  background: rgba(197, 248, 42, 0.05);
+  border: 1px solid var(--acid);
+  border-radius: 4px;
+  padding: 28px 24px;
+  text-align: center;
+  animation: leadSuccessIn 0.5s ease-out;
+}
+.lead-success.active { display: block; }
+@keyframes leadSuccessIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.lead-success-check {
+  width: 48px; height: 48px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--acid);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--night-deep);
+}
+.lead-success-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  color: var(--bone);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.lead-success-sub {
+  font-size: 14px;
+  color: rgba(250, 250, 247, 0.7);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+.lead-success-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--acid);
+  color: var(--night-deep) !important;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 16px 28px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.lead-success-download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(197, 248, 42, 0.3);
+}
+.lead-success-note {
+  margin-top: 18px;
+  font-size: 12px;
+  color: rgba(250, 250, 247, 0.45);
+  letter-spacing: 0.02em;
+}
+
 .lead-form-input {
   background: rgba(250, 250, 247, 0.05) !important;
   border: 1px solid var(--line) !important;
@@ -3266,13 +3329,27 @@ body {
 
         <div class="form-checkbox-group" style="margin: 12px 0 16px;">
           <input type="checkbox" id="leadRgpd" name="rgpd" required>
-          <label for="leadRgpd" style="color: rgba(250, 250, 247, 0.6);">J'accepte de recevoir le guide PDF et la newsletter mensuelle BCI. Désinscription en 1 clic. Données traitées selon RGPD (voir politique).</label>
+          <label for="leadRgpd" style="color: rgba(250, 250, 247, 0.6);">J'accepte que mon adresse soit enregistrée par BCI pour la remise de ce guide et un suivi éventuel. Conservation 3 ans. Désinscription : <a href="mailto:contact@bcorpinternational.com" style="color: var(--acid); text-decoration: underline;">contact@bcorpinternational.com</a>. Traitement conforme RGPD.</label>
         </div>
         <button type="submit" class="form-submit lead-submit">
           Télécharger le guide gratuit
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v12M5 10l7 7 7-7M5 21h14"/></svg>
         </button>
       </form>
+
+      <!-- V15 : bloc affiché après soumission réussie -->
+      <div class="lead-success" id="leadSuccess" role="status" aria-live="polite">
+        <div class="lead-success-check" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="lead-success-title">Merci. Votre guide est prêt.</div>
+        <div class="lead-success-sub">Le téléchargement démarre par un simple clic ci-dessous. Conservez bien le fichier — il est aussi accessible depuis ce même bouton tant que vous restez sur la page.</div>
+        <a href="/guides/4889r64jzj/guide-bci-5-angles-morts.pdf" class="lead-success-download" id="leadDownloadBtn" download="BCI_Guide_5_angles_morts.pdf">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M5 10l7 7 7-7M5 21h14"/></svg>
+          Télécharger le guide (PDF)
+        </a>
+        <div class="lead-success-note">Vous pouvez à présent fermer ce message ou poursuivre la visite du site.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -4479,58 +4556,67 @@ function submitForm(form) {
 }
 
 // ============================================================
-// CONFIGURATION BREVO — À RENSEIGNER APRÈS CRÉATION DU FORMULAIRE
+// V15 — CONFIGURATION TÉLÉCHARGEMENT DU GUIDE
 // ============================================================
-// 1. Créer un compte sur brevo.com (gratuit)
-// 2. Créer une liste "Inscrits guide BCI"
-// 3. Créer un formulaire Brevo (Marketing > Formulaires)
-// 4. Récupérer l'URL d'action du formulaire (commence par https://xxx.sibforms.com/serve/...)
-// 5. Remplacer la valeur ci-dessous par cette URL :
-const BREVO_FORM_URL = 'À_REMPLACER_PAR_URL_BREVO';  // ⚠️ À CONFIGURER
+// Architecture cible : téléchargement immédiat du PDF hébergé sur Vercel
+// dès soumission valide du formulaire. Brevo est OPTIONNEL ici.
+//
+// 1. PDF hébergé à l'URL hashée ci-dessous (non devinable, désindexé via robots.txt)
+//    Pour remplacer le PDF : commit du nouveau fichier au même chemin sur GitHub
+// 2. BREVO_FORM_URL reste défini pour activation FUTURE (mode α/β)
+//    Tant qu'il reste à la valeur par défaut, le lead n'est pas envoyé à Brevo
+//    mais le téléchargement fonctionne quand même.
+// ============================================================
+const GUIDE_PDF_URL = '/guides/4889r64jzj/guide-bci-5-angles-morts.pdf';
+const BREVO_FORM_URL = 'À_REMPLACER_PAR_URL_BREVO';  // optionnel — laisse pour plus tard
 // ============================================================
 
 function submitLead(form) {
   if (!validateAntiSpam(form, 'lead')) return;
 
-  // Si Brevo n'est pas encore configuré, on tombe en mode mockup
-  if (BREVO_FORM_URL === 'À_REMPLACER_PAR_URL_BREVO') {
-    alert('OK - Demande enregistrée (MODE TEST).\n\nLe formulaire n\'est pas encore branché sur Brevo. Voir BCI_Branchement_Brevo.md pour la procédure.');
-    form.reset();
-    generateCaptchas();
-    return;
-  }
-
-  // Mode production : POST vers Brevo
   const email = form.querySelector('[name="email"]').value;
   const submitBtn = form.querySelector('button[type="submit"]');
+  const successBlock = document.getElementById('leadSuccess');
+  const downloadBtn  = document.getElementById('leadDownloadBtn');
+
+  // Verrouillage UI immédiat pendant traitement
   const originalText = submitBtn.innerHTML;
-  submitBtn.innerHTML = 'Envoi en cours...';
+  submitBtn.innerHTML = 'Préparation...';
   submitBtn.disabled = true;
 
-  const formData = new FormData();
-  formData.append('EMAIL', email);
-  formData.append('OPT_IN', '1');
-  formData.append('email_address_check', '');  // Honeypot Brevo
-  formData.append('locale', 'fr');
-
-  fetch(BREVO_FORM_URL, {
-    method: 'POST',
-    body: formData,
-    mode: 'no-cors'  // Brevo retourne du HTML, on ignore la réponse côté client
-  })
-  .then(() => {
-    alert('Merci. Vous allez recevoir le guide PDF par courriel dans quelques minutes.\n\nSi vous ne le voyez pas, vérifiez votre dossier indésirable.');
-    form.reset();
+  // Fonction utilitaire : bascule UI en mode succès
+  function showSuccess() {
+    form.style.display = 'none';
+    if (successBlock) {
+      successBlock.classList.add('active');
+      // Auto-déclenchement doux du téléchargement (le bouton reste pour relance)
+      try {
+        // Cohérent UX : on ne force pas, on laisse le clic utilisateur premier
+        // mais on prépare l'attention sur le bouton
+        if (downloadBtn) downloadBtn.focus({ preventScroll: false });
+      } catch(e) { /* focus non bloquant */ }
+    }
+    // Reset technique
+    submitBtn.innerHTML = originalText;
+    submitBtn.disabled = false;
     generateCaptchas();
-    submitBtn.innerHTML = originalText;
-    submitBtn.disabled = false;
-  })
-  .catch(err => {
-    console.error('Erreur Brevo:', err);
-    alert('Désolé, une erreur est survenue. Merci de réessayer ou de nous écrire directement à contact@bcorpinternational.com.');
-    submitBtn.innerHTML = originalText;
-    submitBtn.disabled = false;
-  });
+  }
+
+  // Envoi optionnel à Brevo si configuré (fire-and-forget, n'affecte pas le téléchargement)
+  if (BREVO_FORM_URL !== 'À_REMPLACER_PAR_URL_BREVO') {
+    const formData = new FormData();
+    formData.append('EMAIL', email);
+    formData.append('OPT_IN', '1');
+    formData.append('email_address_check', '');  // Honeypot Brevo
+    formData.append('locale', 'fr');
+    // no-cors : on n'attend pas la réponse, on ne dépend pas de Brevo pour le téléchargement
+    fetch(BREVO_FORM_URL, { method: 'POST', body: formData, mode: 'no-cors' })
+      .catch(err => console.warn('Brevo POST échoué (non bloquant) :', err));
+  }
+
+  // Le téléchargement est disponible immédiatement dans tous les cas (γ)
+  // Légère temporisation pour transition visuelle plus naturelle (250ms)
+  setTimeout(showSuccess, 250);
 }
 
 // V10 - Book interest form
