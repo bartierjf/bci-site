@@ -1,0 +1,12 @@
+# robots.txt — bcorpinternational.com
+# Politique d'indexation des robots de moteurs de recherche
+
+User-agent: *
+# Autorisation par défaut sur l'ensemble du site
+Allow: /
+
+# Blocage explicite des ressources non publiques destinées aux inscrits
+Disallow: /guides/
+
+# Sitemap (à ajouter quand généré)
+# Sitemap: https://bcorpinternational.com/sitemap.xml
