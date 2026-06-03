@@ -837,14 +837,47 @@ body {
 
 /* ECOSYSTEM */
 .ecosystem { padding: 120px 48px; background: var(--night); color: var(--bone); position: relative; }
-.ecosystem .section-intro,
-.boutique .section-intro { color: rgba(250, 250, 247, 0.75); }
 .eco-wrap { max-width: 1400px; margin: 0 auto; }
 .eco-header .section-eyebrow { color: var(--acid); }
 .eco-header .section-eyebrow::before { background: var(--acid); }
 .eco-header .section-title { color: var(--bone); }
 .eco-diagram { margin: 64px auto 0; max-width: 1100px; position: relative; }
 
+/* AI AGENT */
+.ai-section { padding: 120px 48px; background: var(--night-deep); color: var(--bone); position: relative; overflow: hidden; }
+.ai-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 70% 30%, rgba(197, 248, 42, 0.08), transparent 50%); pointer-events: none; }
+.ai-wrap { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; position: relative; z-index: 2; }
+.ai-left .section-title { color: var(--bone); }
+.ai-left .section-eyebrow { color: var(--acid); }
+.ai-left .section-eyebrow::before { background: var(--acid); }
+.ai-features { margin-top: 32px; display: flex; flex-direction: column; gap: 16px; }
+.ai-feature { display: flex; align-items: flex-start; gap: 16px; font-size: 14px; color: rgba(250, 250, 247, 0.8); font-weight: 300; line-height: 1.55; }
+.ai-feature-icon { width: 28px; height: 28px; flex-shrink: 0; background: var(--acid-soft); color: var(--acid); border-radius: 50%; display: grid; place-items: center; margin-top: 2px; }
+.ai-feature-icon svg { width: 14px; height: 14px; }
+.ai-feature strong { color: var(--bone); font-weight: 600; }
+
+.chat { background: rgba(250, 250, 247, 0.04); backdrop-filter: blur(20px); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font-size: 14px; }
+.chat-header { padding: 18px 22px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 14px; background: rgba(10, 18, 51, 0.4); }
+.chat-avatar { width: 36px; height: 36px; background: var(--acid); border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); color: var(--night); font-weight: 700; font-size: 16px; }
+.chat-info h4 { font-family: var(--font-display); font-size: 15px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 2px; }
+.chat-status { font-family: var(--font-mono); font-size: 10px; color: var(--acid); letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.chat-status::before { content: ''; width: 6px; height: 6px; background: var(--acid); border-radius: 50%; animation: pulse 2s infinite; }
+.chat-body { padding: 22px; min-height: 380px; max-height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+.msg { max-width: 85%; padding: 13px 17px; border-radius: 16px; font-size: 13.5px; line-height: 1.55; animation: msgIn 0.4s ease-out; }
+@keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.msg-bot { background: rgba(250, 250, 247, 0.08); color: var(--bone); border-bottom-left-radius: 4px; align-self: flex-start; }
+.msg-user { background: var(--acid); color: var(--night); border-bottom-right-radius: 4px; align-self: flex-end; font-weight: 500; }
+.msg-disclaimer { font-family: var(--font-mono); font-size: 10px; color: rgba(250, 250, 247, 0.5); text-align: center; padding: 8px 12px; border: 1px dashed var(--line); border-radius: 4px; line-height: 1.5; }
+.chat-input { padding: 14px 18px; border-top: 1px solid var(--line); display: flex; gap: 12px; background: rgba(10, 18, 51, 0.4); }
+.chat-input input { flex: 1; background: transparent; border: none; color: var(--bone); font-family: var(--font-body); font-size: 14px; padding: 8px 0; outline: none; }
+.chat-input input::placeholder { color: rgba(250, 250, 247, 0.4); }
+.chat-input button { background: var(--acid); color: var(--night); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; font-weight: 700; transition: transform 0.2s; }
+.chat-input button:hover { transform: scale(1.05); }
+.chat-typing { display: flex; gap: 4px; padding: 8px; }
+.chat-typing span { width: 6px; height: 6px; background: var(--acid); border-radius: 50%; animation: typing 1.4s infinite; }
+.chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
 
 /* BLOG */
 .blog { padding: 120px 48px; background: var(--bone); border-top: 1px solid var(--line-dark); }
@@ -1713,69 +1746,6 @@ body {
 
 .lead-form { display: flex; flex-direction: column; }
 
-/* === V15 : bloc état de succès après soumission du formulaire === */
-.lead-success {
-  display: none;
-  background: rgba(197, 248, 42, 0.05);
-  border: 1px solid var(--acid);
-  border-radius: 4px;
-  padding: 28px 24px;
-  text-align: center;
-  animation: leadSuccessIn 0.5s ease-out;
-}
-.lead-success.active { display: block; }
-@keyframes leadSuccessIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.lead-success-check {
-  width: 48px; height: 48px;
-  margin: 0 auto 16px;
-  border-radius: 50%;
-  background: var(--acid);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--night-deep);
-}
-.lead-success-title {
-  font-family: 'Fraunces', serif;
-  font-size: 22px;
-  color: var(--bone);
-  margin-bottom: 8px;
-  font-weight: 500;
-}
-.lead-success-sub {
-  font-size: 14px;
-  color: rgba(250, 250, 247, 0.7);
-  margin-bottom: 24px;
-  line-height: 1.5;
-}
-.lead-success-download {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: var(--acid);
-  color: var(--night-deep) !important;
-  font-weight: 700;
-  font-size: 15px;
-  padding: 16px 28px;
-  border-radius: 4px;
-  text-decoration: none;
-  transition: transform 0.2s, box-shadow 0.2s;
-  border: none;
-  cursor: pointer;
-}
-.lead-success-download:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(197, 248, 42, 0.3);
-}
-.lead-success-note {
-  margin-top: 18px;
-  font-size: 12px;
-  color: rgba(250, 250, 247, 0.45);
-  letter-spacing: 0.02em;
-}
-
 .lead-form-input {
   background: rgba(250, 250, 247, 0.05) !important;
   border: 1px solid var(--line) !important;
@@ -2157,6 +2127,7 @@ body {
   .angles-infographic { grid-template-columns: 1fr; }
   .partners-grid { grid-template-columns: repeat(2, 1fr); }
   .omega-formula { grid-template-columns: 1fr; padding: 48px 24px; gap: 32px; }
+  .ai-wrap { grid-template-columns: 1fr; gap: 48px; }
   .trust-wrap { grid-template-columns: 1fr; text-align: center; }
   .footer-wrap { grid-template-columns: 1fr; gap: 32px; }
   .footer-legal { flex-direction: column; text-align: center; }
@@ -2225,6 +2196,104 @@ body {
   .lm-banner-cta { justify-content: center; }
 }
 
+
+/* ========== V15 SPLASH · PAGE D'ENTRÉE À DEUX PORTES ========== */
+.splash { min-height: calc(100vh - 76px); background: radial-gradient(140% 120% at 85% 15%, #16204a 0%, #0d1430 38%, #080d22 72%, #05081a 100%); position: relative; overflow: hidden; padding: 48px 48px 64px; display: flex; flex-direction: column; justify-content: center; }
+.splash-guilloche { position: absolute; top: -260px; right: -260px; width: 760px; height: 760px; opacity: 0.4; pointer-events: none; }
+.splash-wrap { max-width: 1400px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
+.splash-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.32em; color: var(--acid); text-transform: uppercase; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; }
+.splash-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--acid); display: inline-block; }
+.splash-title { font-family: var(--font-display); font-size: clamp(32px, 5vw, 60px); font-weight: 700; color: var(--bone); line-height: 1.05; letter-spacing: -0.015em; margin-bottom: 18px; max-width: 1000px; }
+.splash-title em { color: var(--acid); font-style: italic; font-weight: 400; }
+.splash-intro { font-family: var(--font-sans); font-weight: 300; font-size: 17px; line-height: 1.6; color: rgba(250,250,247,0.72); max-width: 760px; margin-bottom: 56px; }
+.splash-intro strong { color: var(--bone); font-weight: 500; }
+
+.splash-doors { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 36px; }
+.splash-door { position: relative; padding: 40px 36px; background: rgba(250,250,247,0.025); border: 1px solid rgba(197,248,42,0.18); cursor: pointer; transition: all 0.3s; text-decoration: none; color: inherit; display: flex; flex-direction: column; min-height: 380px; }
+.splash-door:hover { background: rgba(197,248,42,0.04); border-color: rgba(197,248,42,0.5); transform: translateY(-3px); }
+.splash-door-spine { position: absolute; left: 0; top: 28px; bottom: 28px; width: 2px; background: linear-gradient(var(--acid), rgba(197,248,42,0.1)); }
+.splash-door-spine::before { content: ''; position: absolute; top: -2px; left: -3px; width: 8px; height: 8px; background: var(--acid); border-radius: 50%; }
+.splash-door-num { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.28em; color: var(--acid); text-transform: uppercase; margin-bottom: 20px; }
+.splash-door-name { font-family: var(--font-display); font-size: 36px; font-weight: 700; color: var(--bone); line-height: 1; letter-spacing: -0.01em; margin-bottom: 10px; }
+.splash-door-sub { font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: 0.28em; color: var(--acid); text-transform: uppercase; margin-bottom: 24px; }
+.splash-door-desc { font-family: var(--font-sans); font-weight: 300; font-size: 14.5px; line-height: 1.6; color: rgba(250,250,247,0.78); margin-bottom: 22px; }
+.splash-door-list { list-style: none; padding: 0; margin: 0 0 28px; }
+.splash-door-list li { font-family: var(--font-sans); font-size: 13px; line-height: 1.6; color: rgba(250,250,247,0.7); padding-left: 18px; position: relative; margin-bottom: 7px; }
+.splash-door-list li::before { content: '·'; color: var(--acid); position: absolute; left: 4px; font-weight: 700; font-size: 18px; line-height: 1; top: 1px; }
+.splash-door-regs { padding-top: 20px; border-top: 1px solid rgba(197,248,42,0.18); margin-bottom: 24px; }
+.splash-door-regs-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.22em; color: rgba(197,248,42,0.7); text-transform: uppercase; margin-bottom: 5px; }
+.splash-door-regs-value { font-family: var(--font-sans); font-size: 11.5px; line-height: 1.5; color: rgba(250,250,247,0.6); }
+.splash-door-cta { margin-top: auto; display: inline-flex; align-items: center; gap: 12px; padding: 14px 24px; background: var(--acid); color: var(--night); font-family: var(--font-sans); font-weight: 600; font-size: 14px; letter-spacing: 0.04em; align-self: flex-start; transition: all 0.2s; }
+.splash-door:hover .splash-door-cta { background: var(--bone); padding-right: 30px; }
+.splash-door-cta svg { width: 14px; height: 14px; transition: transform 0.2s; }
+.splash-door:hover .splash-door-cta svg { transform: translateX(4px); }
+
+.splash-disclaimer { padding: 22px 28px; background: rgba(250,250,247,0.02); border-left: 2px solid var(--acid); font-family: var(--font-sans); font-weight: 300; font-size: 12.5px; line-height: 1.65; color: rgba(250,250,247,0.55); max-width: 1100px; }
+.splash-disclaimer strong { color: rgba(197,248,42,0.85); font-weight: 500; }
+
+@media (max-width: 968px) {
+  .splash { padding: 32px 20px 48px; }
+  .splash-doors { grid-template-columns: 1fr; gap: 18px; }
+  .splash-door { min-height: 0; padding: 32px 28px; }
+  .splash-door-name { font-size: 30px; }
+  .splash-intro { font-size: 15px; margin-bottom: 36px; }
+}
+
+
+/* ========== V16 · ANATOMIE DE L'INDICE Ω ========== */
+.omega-anatomy { padding: 120px 48px; background: var(--night); color: var(--bone); position: relative; overflow: hidden; border-top: 1px solid rgba(197,248,42,0.1); }
+.omega-anatomy::before { content: ''; position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(197,248,42,0.04) 0%, transparent 70%); pointer-events: none; }
+.omega-anatomy-wrap { max-width: 1400px; margin: 0 auto; position: relative; z-index: 2; }
+.omega-anatomy-header { display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: end; margin-bottom: 72px; }
+.omega-anatomy-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.32em; color: var(--acid); text-transform: uppercase; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; }
+.omega-anatomy-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--acid); }
+.omega-anatomy-title { font-family: var(--font-display); font-size: clamp(32px, 4vw, 50px); font-weight: 700; color: var(--bone); line-height: 1.06; letter-spacing: -0.015em; }
+.omega-anatomy-title em { color: var(--acid); font-style: italic; font-weight: 400; }
+.omega-anatomy-intro { font-family: var(--font-sans); font-weight: 300; font-size: 16px; line-height: 1.7; color: rgba(250,250,247,0.72); }
+.omega-anatomy-intro strong { color: var(--bone); font-weight: 500; }
+
+.omega-equation { display: flex; align-items: center; justify-content: center; gap: 24px; padding: 36px; margin-bottom: 56px; background: rgba(197,248,42,0.04); border: 1px solid rgba(197,248,42,0.2); border-radius: 4px; flex-wrap: wrap; }
+.omega-eq-block { text-align: center; }
+.omega-eq-num { font-family: var(--font-display); font-size: 56px; font-weight: 700; color: var(--acid); line-height: 1; }
+.omega-eq-lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.26em; color: rgba(250,250,247,0.6); text-transform: uppercase; margin-top: 6px; }
+.omega-eq-op { font-family: var(--font-display); font-size: 36px; color: rgba(250,250,247,0.4); font-weight: 300; }
+.omega-eq-total .omega-eq-num { font-size: 72px; }
+
+.omega-dims { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; margin-bottom: 48px; }
+.omega-dim-card { background: rgba(250,250,247,0.025); border: 1px solid rgba(197,248,42,0.18); padding: 28px 24px; position: relative; transition: all 0.25s; }
+.omega-dim-card:hover { background: rgba(197,248,42,0.05); border-color: rgba(197,248,42,0.5); transform: translateY(-2px); }
+.omega-dim-num { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em; color: var(--acid); text-transform: uppercase; margin-bottom: 14px; }
+.omega-dim-name { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--bone); line-height: 1.15; margin-bottom: 8px; }
+.omega-dim-vars { display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px; }
+.omega-dim-vars-n { font-family: var(--font-display); font-size: 34px; font-weight: 700; color: var(--acid); line-height: 1; }
+.omega-dim-vars-lbl { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; color: rgba(250,250,247,0.5); text-transform: uppercase; }
+.omega-dim-desc { font-family: var(--font-sans); font-weight: 300; font-size: 12.5px; line-height: 1.55; color: rgba(250,250,247,0.68); }
+
+.omega-method-note { padding: 24px 32px; background: rgba(250,250,247,0.02); border-left: 2px solid var(--acid); font-family: var(--font-sans); font-weight: 300; font-size: 13.5px; line-height: 1.7; color: rgba(250,250,247,0.65); max-width: 1100px; }
+.omega-method-note strong { color: rgba(197,248,42,0.9); font-weight: 500; }
+
+@media (max-width: 968px) {
+  .omega-anatomy { padding: 64px 20px; }
+  .omega-anatomy-header { grid-template-columns: 1fr; gap: 28px; margin-bottom: 48px; }
+  .omega-dims { grid-template-columns: repeat(2, 1fr); }
+  .omega-equation { padding: 24px; gap: 14px; }
+  .omega-eq-num { font-size: 42px; }
+  .omega-eq-total .omega-eq-num { font-size: 56px; }
+}
+@media (max-width: 580px) {
+  .omega-dims { grid-template-columns: 1fr; }
+  .omega-eq-op { display: none; }
+}
+
+
+/* ========== V16 · NOTE RGPD SOUS FORMULAIRE ========== */
+.form-rgpd-note { margin-top: 16px; padding: 14px 18px; background: rgba(197,248,42,0.04); border-left: 2px solid rgba(197,248,42,0.45); font-family: var(--font-sans); font-weight: 300; font-size: 11.5px; line-height: 1.6; color: rgba(250,250,247,0.6); border-radius: 0 3px 3px 0; }
+.form-rgpd-note.on-light { background: rgba(10,18,51,0.04); border-left-color: rgba(10,18,51,0.5); color: rgba(10,18,51,0.62); }
+.form-rgpd-note strong { color: var(--acid); font-weight: 500; }
+.form-rgpd-note.on-light strong { color: var(--night); }
+.form-rgpd-note .rgpd-link { color: var(--acid); cursor: pointer; text-decoration: underline; background: none; border: none; padding: 0; font: inherit; }
+.form-rgpd-note.on-light .rgpd-link { color: var(--night); font-weight: 500; }
+
 </style>
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFnUlEQVR42t1Xa2xURRg9M/exd599QFvsUiilQFGgSAnPPkQgyiMBApJA5AdBxIgBwSAIxBBNlEdiVcQosREwNQixVLEiBBBaWijvl1aLlFRsKbTQ3W13e9/jj70NyypiQUriTebHzWTmO3O+M9/5hjjisxge4UfxiL87AFCqXiVEq7d+zU4H0CtDrnlzsxwCmAYwBoB1KgBeYCx7Ep+eNzlwFCAcwIxO14Cuwli9WcxN7hEoAwgPML3TADTWcxIvgmsLMvWjPfxQXpAvWSCMzgDAbjXa+/1RY94iFMQdR+yrPtYIYIba5zshBVzcuy8bFyQ7EXxNZjB7Ep8+dlrLqYephwgA4ZNWn/fkFr6vnortSp2+JjO4YpOYk/BYS8U99GCG55huAWUdBhCfELow8yV/JWCGtqx3Zxw/oF+J7UqdoRambCzhBvG8UhMGEV0fmBHeh/DW4ACQf1tHOMGevAYANJWp7xXTgd5UuaZiLzUOFImu3MlaKD6RuuwuIqakqU1lJYIDAAcQYgVhAKGi2Fb15OjQz1m5cr0cVK/4m209w/NMs9gwIwaLWH+bAV239dq6Xj0xdrqQUVCqOV1upXbB06Lia2IhVWH6U1OFvmOmBE5G6MEEQEaO9x+ev1rTmhoIqTzAsRHjme3VdYGLPC//BhAhgplohgAAJNKMBEGu3nHe7OGKIRIAzMvRShuuiolfnjJ62J1EFCXCz87SKxqvuUcBwIRZ/nK7A1xRgWcoQHhBkKsZQOK6ao2zFzPPkRJ20zTBnG5GTZOwVj/YzeuUq6+V+jImJEWJkBmaJvV9Ic88o8pMN3SYBWVCblaecn3BOPOc0gZNV2Fs2sNlEuiNKb0Dpd3T4CgqiBkBEAowfflGFVPnyjcbr7lHff0pmtd+JeYtWscP6j2AOJU2oOEqFW7UCUmMcTF/y0CYWsI53cHTG3Yyb59BXBIAbNugnjxXgda3twkjHW5i27ddq1Jkpm9c6ezGwHcJ+wbhACMAcJ60/oHDc5YSb/4y2hzwOQaHU3EPEVp4KMAMTRW93xeSFlWWq4bkct7M0VyyaZjBPYX65ceH0i5PDOOTiz8zqmuqHP0t0Fa1pPYuia1Hl39I0t6YbXcostQnSjPMSj+5C4DbIADOc/GE5N23XS5PH8BI9iQ+/Vota7Y7CVeYr5/PGEJiK/fzNoA6wpsTAujN+bv0mCXTeL9hiD0Bpob3ixy3g/9DQ0K49mtzvc49+rUZdtfSKeqh6QuEzG8/Ny6XFMaMlhzg4xPaqqzUaQBo9rOtF4sL9EuaKmWEixIRowN2pCOit+8yF+ftDeHD5UrF/qKYHIAZPx03b6X1N5R2JydEq5+3Uhiwb4ejl8UIvS87jixxADMBIkyf7zsmCIzs/iJ2FMAUgHCJXiIx1l6GCTf39VDDJ2v0CyYTvVYz86AAwjdi4mx/eYsPuhVcB4jN6Q6enrVYHHK23J4KgGZP8JW644hYedAzylpH77shsYLrAOGHjfEftkmg+3bGZrfPdE8NlOUXs5SZg4xjhkldzy3wV6YPJM4PVrjSrEpH75X3O7qwu5ycT0puKR83g3R7Z6GnHwB0SWw9umQDSxo+XshZu1AtS/TCmDwneKX0O6LUXvIMj+gZSEfsOKoQwQRAOarWvrVVMVfNcSbYHfLlRWt127gZQsbRvXrNoW+Mut+rqdnUQCXfLUcmQKUI+yUd7QciAViiA5uzJHD24C7alpJums8v5fptWWf8euaI1MMwbL3uppX7bUj4aOr7ZfoPjXyG65+awQInfsSNVyZKIsDnRfm/RTWhDxL8LyngOKXmh6tmWulu/VL+MhpoDTizIkRJH8ZLKgKAGXpxdUv1L2cQKC1xDwvnlunR/v3QABDojXanWhcKOgb/F7ntsAYY+IRQkE+I8oP//+v4T9qJem/UsyATAAAAAElFTkSuQmCC">
 <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
@@ -2234,12 +2303,12 @@ body {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {"@type":"Question","name":"Combien coûte un accompagnement BCI ?","acceptedAnswer":{"@type":"Answer","text":"Le premier rendez-vous est gratuit et sans engagement (45 minutes). Le Diagnostic Premium fait l'objet d'un devis personnalisé, généralement compris entre 3 500 et 12 000 € HT selon la complexité du patrimoine et le nombre de dimensions à mesurer en profondeur. La supervision annuelle est facturée sur abonnement ou au temps passé. Tous les prix sont remis par écrit avant tout engagement, conformément aux obligations MIF2."}},
+    {"@type":"Question","name":"Combien coûte un accompagnement BCI ?","acceptedAnswer":{"@type":"Answer","text":"L'Audit Flash est gratuit. Le Diagnostic Premium fait l'objet d'un devis personnalisé, généralement compris entre 3 500 et 12 000 € HT selon la complexité du patrimoine et le nombre de dimensions à mesurer en profondeur. La supervision annuelle est facturée sur abonnement ou au temps passé. Tous les prix sont remis par écrit avant tout engagement, conformément aux obligations MIF2."}},
     {"@type":"Question","name":"Suis-je concerné par votre approche ?","acceptedAnswer":{"@type":"Answer","text":"L'approche BCI a un sens lorsque plusieurs dimensions du patrimoine interagissent : un dirigeant en préparation de cession, une famille avec immobilier et entreprise transmis ensemble, un acquéreur d'actif complexe. Si votre patrimoine se résume à une résidence principale et une assurance-vie classique, un CGP traditionnel suffit largement."}},
     {"@type":"Question","name":"En quoi êtes-vous différent d'un CGP classique ?","acceptedAnswer":{"@type":"Answer","text":"Un CGP classique recommande des produits adaptés à un profil. BCI mesure la cohérence du patrimoine avant toute recommandation, sur cinq dimensions auditables. La différence se voit sur les actifs physiques, sur l'inter-statut (BCI cumule CIF, IAS, IOBSP et cartes T & G), et sur la traçabilité écrite et opposable de chaque acte de conseil."}},
     {"@type":"Question","name":"Êtes-vous vraiment indépendant ?","acceptedAnswer":{"@type":"Answer","text":"Indépendant au sens juridique : BCI n'est lié à aucun groupe bancaire ni assureur. Indépendant au sens économique : la sélection des supports financiers et assurantiels se fait sans liste imposée. La transparence sur les commissions perçues est totale et figure dans chaque rapport d'adéquation, conformément à la directive MIF2."}},
     {"@type":"Question","name":"Comment êtes-vous rémunéré ?","acceptedAnswer":{"@type":"Answer","text":"Trois sources, présentées par écrit avant chaque mission : honoraires de conseil pour le diagnostic et l'accompagnement, commissions réglementées sur les produits financiers et assurantiels intermédiés (transparence totale, mention dans le rapport d'adéquation), et commissions de transaction pour les opérations immobilières (cartes T & G, loi Hoguet). Aucune rétrocession cachée."}},
-    {"@type":"Question","name":"Combien de temps prend un Diagnostic Premium ?","acceptedAnswer":{"@type":"Answer","text":"Entre deux et quatre semaines selon la complexité, depuis la signature de la convention jusqu'à la remise du rapport écrit. Le délai inclut la collecte des pièces, la mesure des 38 variables sur les cinq dimensions de la Patrimétrologie, les éventuels déplacements sur site, et la rédaction de la restitution. Un point de situation hebdomadaire vous est transmis."}},
+    {"@type":"Question","name":"Combien de temps prend un Diagnostic Premium ?","acceptedAnswer":{"@type":"Answer","text":"Entre deux et quatre semaines selon la complexité, depuis la signature de la convention jusqu'à la remise du rapport écrit. Le délai inclut la collecte des pièces, la mesure des 38 variables, les éventuels déplacements sur site, et la rédaction de la restitution. Un point de situation hebdomadaire vous est transmis."}},
     {"@type":"Question","name":"Que se passe-t-il après l'audit ?","acceptedAnswer":{"@type":"Answer","text":"Vous recevez le rapport Ω écrit, daté, signé et opposable. Trois suites possibles : vous vous en servez seul (le rapport est votre propriété), vous confiez à BCI l'architecture (plan d'action coordonné avec notaire, avocat, banquier), ou vous ne faites rien (ce qui reste votre droit le plus strict). Aucune relance commerciale insistante."}},
     {"@type":"Question","name":"Vos données sont-elles confidentielles ?","acceptedAnswer":{"@type":"Answer","text":"Oui. BCI est soumis au secret professionnel des CIF (art. L.531-12 CMF) et aux obligations RGPD. Les données patrimoniales sont conservées chiffrées, sur serveurs hébergés en France, pour la durée légale de cinq ans (art. L.533-10 CMF) puis détruites. Aucune donnée n'est transmise à un tiers sans votre consentement explicite."}}
   ]
@@ -2375,11 +2444,70 @@ body {
     <button class="nav-link" onclick="scrollToSection('boutique')">Livres</button>
     <button class="nav-link" onclick="scrollToSection('contact')">Contact</button>
   </div>
-  <button class="nav-cta" onclick="scrollToSection('premier-rdv')">Premier rendez-vous</button>
+  <button class="nav-cta" onclick="scrollToSection('ai')">Audit Flash</button>
 </nav>
 
 <!-- ============== PAGE HOME ============== -->
 <div class="page active" id="page-home">
+
+<!-- SPLASH · PAGE D'ENTRÉE À DEUX PORTES (V15 · conformité) -->
+<section class="splash" id="splash">
+  <div class="splash-guilloche"><svg viewBox="0 0 760 760"><defs><radialGradient id="splashFade" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#C5F82A" stop-opacity="0"/><stop offset="70%" stop-color="#C5F82A" stop-opacity="0.1"/><stop offset="100%" stop-color="#C5F82A" stop-opacity="0"/></radialGradient></defs><g fill="none" stroke="#C5F82A" stroke-opacity="0.08" stroke-width="0.6"><circle cx="380" cy="380" r="40"/><circle cx="380" cy="380" r="51"/><circle cx="380" cy="380" r="62"/><circle cx="380" cy="380" r="73"/><circle cx="380" cy="380" r="84"/><circle cx="380" cy="380" r="95"/><circle cx="380" cy="380" r="106"/><circle cx="380" cy="380" r="117"/><circle cx="380" cy="380" r="128"/><circle cx="380" cy="380" r="139"/><circle cx="380" cy="380" r="150"/><circle cx="380" cy="380" r="161"/><circle cx="380" cy="380" r="172"/><circle cx="380" cy="380" r="183"/><circle cx="380" cy="380" r="194"/><circle cx="380" cy="380" r="205"/><circle cx="380" cy="380" r="216"/><circle cx="380" cy="380" r="227"/><circle cx="380" cy="380" r="238"/><circle cx="380" cy="380" r="249"/><circle cx="380" cy="380" r="260"/><circle cx="380" cy="380" r="271"/><circle cx="380" cy="380" r="282"/><circle cx="380" cy="380" r="293"/><circle cx="380" cy="380" r="304"/><circle cx="380" cy="380" r="315"/><circle cx="380" cy="380" r="326"/><circle cx="380" cy="380" r="337"/><circle cx="380" cy="380" r="348"/><circle cx="380" cy="380" r="359"/><circle cx="380" cy="380" r="370"/></g><g fill="none" stroke="url(#splashFade)" stroke-width="0.8"><circle cx="380" cy="380" r="55"/><circle cx="380" cy="380" r="77"/><circle cx="380" cy="380" r="99"/><circle cx="380" cy="380" r="121"/><circle cx="380" cy="380" r="143"/><circle cx="380" cy="380" r="165"/><circle cx="380" cy="380" r="187"/><circle cx="380" cy="380" r="209"/><circle cx="380" cy="380" r="231"/><circle cx="380" cy="380" r="253"/><circle cx="380" cy="380" r="275"/><circle cx="380" cy="380" r="297"/><circle cx="380" cy="380" r="319"/><circle cx="380" cy="380" r="341"/><circle cx="380" cy="380" r="363"/></g></svg></div>
+  <div class="splash-wrap">
+    <div class="splash-eyebrow">DEUX ENTITÉS · DEUX MÉTIERS · DEUX RÉGIMES</div>
+    <h1 class="splash-title">Le groupe <em>BCI</em>.<br>Choisissez votre porte d'entrée.</h1>
+    <p class="splash-intro">BCI réunit deux structures juridiquement distinctes, animées par la même rigueur. <strong>Conseil patrimonial réglementé</strong> d'un côté, <strong>ingénierie technique du bâti</strong> de l'autre. Chaque métier répond à son propre régime juridique, sa propre autorité, sa propre assurance.</p>
+
+    <div class="splash-doors">
+
+      <!-- PORTE 1 : BCI PATRIMOINE -->
+      <a class="splash-door" onclick="enterEntity('patrimoine'); return false;" href="#">
+        <div class="splash-door-spine"></div>
+        <div class="splash-door-num">Entité 1 · Conseil réglementé</div>
+        <div class="splash-door-name">BCI</div>
+        <div class="splash-door-sub">Patrimétrologie</div>
+        <p class="splash-door-desc">Cabinet fondateur de la Patrimétrologie, science de la mesure de la cohérence patrimoniale sur cinq dimensions. Pour dirigeants, familles et patrimoines exigeants.</p>
+        <ul class="splash-door-list">
+          <li>Audit Ω et stratégie de transmission</li>
+          <li>Pacte Dutreil, démembrement, cession PME</li>
+          <li>Conseil financier et assurantiel indépendant</li>
+          <li>Conseil immobilier haut de gamme</li>
+        </ul>
+        <div class="splash-door-regs">
+          <div class="splash-door-regs-label">Régime juridique</div>
+          <div class="splash-door-regs-value">SARL B CORP INTERNATIONAL · CIF · IAS · IOBSP · Cartes T &amp; G<br>ORIAS 22006234 · AMF · ACPR · MIF2 · DDA</div>
+        </div>
+        <span class="splash-door-cta">Entrer · Patrimétrologie <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </a>
+
+      <!-- PORTE 2 : BCI ELEC -->
+      <a class="splash-door" onclick="enterEntity('elec'); return false;" href="#">
+        <div class="splash-door-spine"></div>
+        <div class="splash-door-num">Entité 2 · Travaux techniques</div>
+        <div class="splash-door-name">BCI Elec</div>
+        <div class="splash-door-sub">Ingénierie · Couche Zéro</div>
+        <p class="splash-door-desc">L'infrastructure technique du bâti comme premier rempart de votre patrimoine. Audit, mise aux normes, domotique et continuité électrique.</p>
+        <ul class="splash-door-list">
+          <li>Audit installation et mise aux normes NF C 15-100</li>
+          <li>Domotique, fibre, acoustique</li>
+          <li>Continuité électrique et onduleurs</li>
+          <li>Particuliers et professionnels</li>
+        </ul>
+        <div class="splash-door-regs">
+          <div class="splash-door-regs-label">Régime juridique</div>
+          <div class="splash-door-regs-value">SARL BCI Elec · SIREN 999 175 839 · APE 4321A<br>Assurance décennale ERGO · NF C 15-100 · Art. 1792 C. civ.</div>
+        </div>
+        <span class="splash-door-cta">Entrer · BCI Elec <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </a>
+
+    </div>
+
+    <div class="splash-disclaimer">
+      <strong>Important.</strong> BCI Patrimoine (SARL B CORP INTERNATIONAL) et BCI Elec sont deux entités juridiquement distinctes. Les prestations techniques de BCI Elec ne constituent pas un conseil en investissement au sens de l'article L.541-1 du Code monétaire et financier. Chaque prestation relève du régime de responsabilité et de l'assurance propres à l'entité qui la fournit. La marque commune et le colibri signalent l'appartenance au même groupe, sans confusion possible des responsabilités.
+    </div>
+
+  </div>
+</section>
 
 <!-- HERO -->
 <section class="hero">
@@ -2441,8 +2569,8 @@ body {
       </p>
       <!-- ============ FIN HERO SUBTITLE ============ -->
       <div class="hero-cta-group">
-        <button class="btn-primary" onclick="scrollToSection('premier-rdv')">
-          Premier rendez-vous gratuit
+        <button class="btn-primary" onclick="scrollToSection('ai')">
+          Audit Flash gratuit
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M5 12h14M13 6l6 6-6 6"/>
           </svg>
@@ -2456,7 +2584,7 @@ body {
         <div class="hero-trust-sep"></div>
         <div class="hero-trust-item"><span class="hero-trust-num">4</span><span class="hero-trust-lbl">statuts réglementés</span></div>
         <div class="hero-trust-sep"></div>
-        <div class="hero-trust-item"><span class="hero-trust-num">47</span><span class="hero-trust-lbl">variables mesurées</span></div>
+        <div class="hero-trust-item"><span class="hero-trust-num">38</span><span class="hero-trust-lbl">variables mesurées</span></div>
         <div class="hero-trust-sep"></div>
         <div class="hero-trust-item"><span class="hero-trust-num">ORIAS</span><span class="hero-trust-lbl">22006234</span></div>
       </div>
@@ -2491,7 +2619,7 @@ body {
           </svg>
           <div class="omega-gauge-value">
             <div class="omega-gauge-num" id="omegaNum">76</div>
-            <div class="omega-gauge-label">Score type · valeur illustrative · méthodologie à paraître 2026</div>
+            <div class="omega-gauge-label">Score patrimétrologique</div>
           </div>
         </div>
 
@@ -2512,7 +2640,7 @@ body {
         </div>
 
         <div class="omega-card-footer">
-          Indice propriétaire BCI · 38 variables — la part minoritaire du nombre d'or (φ ≈ 1,618) · Survolez chaque dimension
+          Indice propriétaire BCI · 38 variables auditables · Survolez chaque dimension
         </div>
       </div>
     </div>
@@ -2570,7 +2698,7 @@ body {
     <div class="metric-cell">
       <svg class="metric-cell-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
       <div class="metric-cell-value">Ω</div>
-      <div class="metric-cell-label">Indice propriétaire 38 variables (φ)</div>
+      <div class="metric-cell-label">Indice propriétaire 38 variables</div>
     </div>
     <div class="metric-cell">
       <svg class="metric-cell-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
@@ -2798,7 +2926,7 @@ body {
     <div>
       <div class="omega-label">L'indicateur propriétaire</div>
       <h3 class="omega-title">L'indice <em>Ω</em>.<br>Une mesure, pas une opinion.</h3>
-      <p class="omega-desc">Un seul indicateur. 38 variables structurées par le nombre d'or (φ ≈ 1,618), réparties sur les cinq dimensions du patrimoine : physique, juridique, fiscale, humaine, temporelle. Un instrument conçu pour être opposable, traçable et reproductible. Méthodologie complète publiée en 2026.</p>
+      <p class="omega-desc">Un seul indicateur. 38 variables mesurables. Cinq dimensions du patrimoine : physique, juridique, fiscale, humaine, temporelle. Score opposable. Pas une opinion, une mesure.</p>
     </div>
     <div class="omega-viz">
       <svg viewBox="0 0 400 400" fill="none" style="width: 100%; height: auto;">
@@ -2830,6 +2958,62 @@ body {
   </div>
 </section>
 
+<!-- ANATOMIE DE L'INDICE Ω (V16) -->
+<section class="omega-anatomy" id="omega-anatomy">
+  <div class="omega-anatomy-wrap">
+    <div class="omega-anatomy-header">
+      <div>
+        <div class="omega-anatomy-eyebrow">Anatomie de l'indice · Méthode</div>
+        <h2 class="omega-anatomy-title">Comment compose-t-on un score <em>Ω</em> sur 38 variables.</h2>
+      </div>
+      <p class="omega-anatomy-intro">Le score Ω n'est pas un agrégat opaque. Il se construit par <strong>cinq dimensions du patrimoine</strong>, chacune décomposée en sept à huit variables auditables. Chaque variable a sa source, son barème, sa pondération documentée. Le client peut, à tout moment, demander la traçabilité d'une variable précise. C'est ce qui distingue une mesure d'une opinion.</p>
+    </div>
+
+    <div class="omega-equation">
+      <div class="omega-eq-block"><div class="omega-eq-num">5</div><div class="omega-eq-lbl">Dimensions</div></div>
+      <div class="omega-eq-op">×</div>
+      <div class="omega-eq-block"><div class="omega-eq-num">7-8</div><div class="omega-eq-lbl">Variables / dimension</div></div>
+      <div class="omega-eq-op">=</div>
+      <div class="omega-eq-block omega-eq-total"><div class="omega-eq-num">38</div><div class="omega-eq-lbl">Variables Ω auditables</div></div>
+    </div>
+
+    <div class="omega-dims">
+      <div class="omega-dim-card">
+        <div class="omega-dim-num">D.01</div>
+        <div class="omega-dim-name">Physique</div>
+        <div class="omega-dim-vars"><span class="omega-dim-vars-n">8</span><span class="omega-dim-vars-lbl">variables</span></div>
+        <p class="omega-dim-desc">État du bâti, conformité électrique, isolement, fibre, sécurité, vétusté. Mesurables sur site.</p>
+      </div>
+      <div class="omega-dim-card">
+        <div class="omega-dim-num">D.02</div>
+        <div class="omega-dim-name">Juridique</div>
+        <div class="omega-dim-vars"><span class="omega-dim-vars-n">8</span><span class="omega-dim-vars-lbl">variables</span></div>
+        <p class="omega-dim-desc">Régime matrimonial, démembrements, baux, pactes, clauses bénéficiaires, mandats. Pièces opposables.</p>
+      </div>
+      <div class="omega-dim-card">
+        <div class="omega-dim-num">D.03</div>
+        <div class="omega-dim-name">Fiscale</div>
+        <div class="omega-dim-vars"><span class="omega-dim-vars-n">8</span><span class="omega-dim-vars-lbl">variables</span></div>
+        <p class="omega-dim-desc">IFI, plus-values latentes, Dutreil, abattements, mise à plat des flux. Sources : avis, déclarations.</p>
+      </div>
+      <div class="omega-dim-card">
+        <div class="omega-dim-num">D.04</div>
+        <div class="omega-dim-name">Humaine</div>
+        <div class="omega-dim-vars"><span class="omega-dim-vars-n">7</span><span class="omega-dim-vars-lbl">variables</span></div>
+        <p class="omega-dim-desc">Gouvernance familiale, mandats de protection, continuité d'entreprise, transmission préparée.</p>
+      </div>
+      <div class="omega-dim-card">
+        <div class="omega-dim-num">D.05</div>
+        <div class="omega-dim-name">Temporelle</div>
+        <div class="omega-dim-vars"><span class="omega-dim-vars-n">7</span><span class="omega-dim-vars-lbl">variables</span></div>
+        <p class="omega-dim-desc">Horizons de cession, alignement liquidité-besoins, scénarios à 10 ans, supervision IA.</p>
+      </div>
+    </div>
+
+    <div class="omega-method-note"><strong>Méthode auditable.</strong> Le détail des 38 variables, des sources retenues pour chaque mesure, des barèmes et des pondérations est documenté dans la note méthodologique BCI, remise au client en début de mission. Cette note évolue annuellement sous la supervision du fondateur. Toute évolution de méthode est tracée et versionnée.</div>
+  </div>
+</section>
+
 <!-- WORKFLOW -->
 <section class="workflow">
   <div class="workflow-wrap">
@@ -2840,15 +3024,15 @@ body {
     <div class="workflow-steps">
       <div class="workflow-step">
         <div class="workflow-step-num">01</div>
-        <div class="workflow-step-title">Premier rendez-vous</div>
-        <div class="workflow-step-time">45 min · gratuit</div>
-        <div class="workflow-step-desc">Sans engagement. Vous exposez, j'écoute. Vous repartez avec un point d'orientation clair.</div>
+        <div class="workflow-step-title">Audit Flash</div>
+        <div class="workflow-step-time">10 min · gratuit</div>
+        <div class="workflow-step-desc">8 questions. Un score indicatif. Les angles morts révélés.</div>
       </div>
       <div class="workflow-step">
         <div class="workflow-step-num">02</div>
         <div class="workflow-step-title">Diagnostic Premium</div>
         <div class="workflow-step-time">2 à 4 semaines</div>
-        <div class="workflow-step-desc">Mesure complète des 38 variables — la part minoritaire du nombre d'or (φ ≈ 1,618), proportion fondamentale appliquée au patrimoine. Restitution écrite et signée. Documentation méthodologique complète à paraître 2026.</div>
+        <div class="workflow-step-desc">Mesure complète des 38 variables. Restitution écrite, opposable, signée.</div>
       </div>
       <div class="workflow-step">
         <div class="workflow-step-num">03</div>
@@ -3020,6 +3204,37 @@ body {
   </div>
 </section>
 
+<!-- AI AGENT -->
+<section class="ai-section" id="ai">
+  <div class="ai-wrap">
+    <div class="ai-left">
+      <div class="section-eyebrow">Agent IA · Audit Flash</div>
+      <h2 class="section-title">Un <em>pré-diagnostic</em> avant le rendez-vous humain.</h2>
+      <div class="ai-features">
+        <div class="ai-feature"><span class="ai-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span><strong>Conforme par construction.</strong> Ne franchit jamais la ligne du conseil personnalisé. Cadré CIF, IAS, IOBSP, AI Act.</span></div>
+        <div class="ai-feature"><span class="ai-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span><strong>Score Ω indicatif</strong> en 8 questions. Vous comprenez où votre patrimoine perd de la valeur.</span></div>
+        <div class="ai-feature"><span class="ai-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span><strong>Logs traçables 5 ans</strong> (art. L.533-10 CMF). Conformité RGPD intégrée par défaut.</span></div>
+        <div class="ai-feature"><span class="ai-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span><strong>Sortie systématique vers l'humain.</strong> L'IA prépare le rendez-vous, elle ne remplace jamais le Patrimétrologue.</span></div>
+      </div>
+    </div>
+    <div class="chat">
+      <div class="chat-header">
+        <div class="chat-avatar">Ω</div>
+        <div class="chat-info"><h4>Assistant Patrimétrologique</h4><div class="chat-status">En ligne · Mode pédagogique</div></div>
+      </div>
+      <div class="chat-body" id="chatBody">
+        <div class="msg-disclaimer">Cet assistant fournit des informations pédagogiques. Il ne constitue pas un conseil en investissement (art. L.541-1 CMF) ni une recommandation personnalisée (DDA).</div>
+        <div class="msg msg-bot">Bonjour. Je suis l'assistant patrimétrologique du cabinet BCI. Pour vous orienter au mieux, pouvez-vous me dire ce qui vous amène aujourd'hui ?</div>
+        <div class="msg msg-user">Je vais vendre ma PME industrielle l'an prochain et je ne sais pas si mon patrimoine est bien structuré pour la cession.</div>
+        <div class="msg msg-bot">Merci. Une cession PME bute sur trois angles morts : la couche physique de vos locaux (5 à 15 % de la valorisation), l'inter-statut (apport-cession, holding, assurance-vie) et la gouvernance familiale. Je vous propose un Audit Flash en 8 questions pour estimer votre indice Ω. Jean François Bartier vous rappelle ensuite. D'accord ?</div>
+      </div>
+      <div class="chat-input">
+        <input type="text" placeholder="Posez votre question ou décrivez votre situation..." id="chatInput">
+        <button onclick="sendMsg()">→</button>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- BLOG -->
 <section class="blog">
@@ -3041,7 +3256,7 @@ body {
       <article class="blog-card">
         <div class="blog-card-meta"><span class="blog-card-cat">MÉTHODE</span><span>9 min de lecture</span></div>
         <h3 class="blog-card-title">L'indice Ω, anatomie d'une métrique patrimoniale opposable</h3>
-        <p class="blog-card-excerpt">Comment construire un indicateur reproductible et opposable sur 38 variables, structurées par la proportion du nombre d'or. Inspiration directe de la métrologie carbone de Jean-Marc Jancovici.</p>
+        <p class="blog-card-excerpt">Comment construire un indicateur reproductible et opposable sur 38 variables. Inspiration directe de la métrologie carbone de Jean-Marc Jancovici.</p>
         <a class="blog-card-arrow">Lire</a>
       </article>
       <article class="blog-card">
@@ -3133,7 +3348,7 @@ body {
           </div>
         </div>
         <div class="book-status" style="background: rgba(197, 248, 42, 0.15); color: var(--acid);">En préparation</div>
-        <h3 class="book-title">L'indice Ω : 38 variables structurées par le nombre d'or</h3>
+        <h3 class="book-title">L'indice Ω : 38 variables auditables</h3>
         <p class="book-desc">Cahier technique destiné aux praticiens. Construction de l'indicateur, méthode de pondération, protocoles d'audit. Référentiel professionnel.</p>
         <div class="book-meta"><span>Édition 2027</span><span>Format pro</span></div>
         <button class="book-cta" onclick="openBookForm('indice-omega')">Recevoir l'alerte</button>
@@ -3218,7 +3433,7 @@ body {
         28 pages pour mesurer vous-même les zones où votre patrimoine perd silencieusement de la valeur. Méthode propriétaire BCI. Tableaux d'auto-évaluation, grille Ω simplifiée, cas pratiques anonymisés.
       </p>
       <ul class="lead-magnet-list">
-        <li><span class="lead-check">✓</span> Grille d'auto-diagnostic des 38 variables Ω (φ)</li>
+        <li><span class="lead-check">✓</span> Grille d'auto-diagnostic des 38 variables Ω</li>
         <li><span class="lead-check">✓</span> 5 cas pratiques avant/après mesure</li>
         <li><span class="lead-check">✓</span> Check-list de cession PME en 12 points</li>
         <li><span class="lead-check">✓</span> Glossaire CIF · IAS · IOBSP · Hoguet</li>
@@ -3264,27 +3479,16 @@ body {
 
         <div class="form-checkbox-group" style="margin: 12px 0 16px;">
           <input type="checkbox" id="leadRgpd" name="rgpd" required>
-          <label for="leadRgpd" style="color: rgba(250, 250, 247, 0.6);">J'accepte que mon adresse soit enregistrée par BCI pour la remise de ce guide et un suivi éventuel. Conservation 3 ans. Désinscription : <a href="mailto:contact@bcorpinternational.com" style="color: var(--acid); text-decoration: underline;">contact@bcorpinternational.com</a>. Traitement conforme RGPD.</label>
+          <label for="leadRgpd" style="color: rgba(250, 250, 247, 0.6);">J'accepte de recevoir le guide PDF et la newsletter mensuelle BCI. Désinscription en 1 clic.</label>
+        </div>
+        <div class="form-rgpd-note">
+          <strong>Information RGPD.</strong> Vos données (courriel) sont collectées par BCI · Patrimétrologie (nom commercial de la SARL B CORP INTERNATIONAL) pour l'envoi du guide PDF demandé et l'envoi occasionnel d'une newsletter patrimoniale. Base légale : <strong>consentement</strong> (art. 6.1.a RGPD). Conservation : jusqu'à désinscription, et au plus 3 ans sans interaction. Vous disposez des droits d'accès, rectification, opposition, effacement, portabilité et limitation. Détail dans la <button type="button" class="rgpd-link" onclick="openModal('privacy')">politique de confidentialité</button>.
         </div>
         <button type="submit" class="form-submit lead-submit">
           Télécharger le guide gratuit
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v12M5 10l7 7 7-7M5 21h14"/></svg>
         </button>
       </form>
-
-      <!-- V15 : bloc affiché après soumission réussie -->
-      <div class="lead-success" id="leadSuccess" role="status" aria-live="polite">
-        <div class="lead-success-check" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <div class="lead-success-title">Merci. Votre guide est prêt.</div>
-        <div class="lead-success-sub">Le téléchargement démarre par un simple clic ci-dessous. Conservez bien le fichier — il est aussi accessible depuis ce même bouton tant que vous restez sur la page.</div>
-        <a href="/guides/4889r64jzj/guide-bci-5-angles-morts.pdf" class="lead-success-download" id="leadDownloadBtn" download="BCI_Guide_5_angles_morts.pdf">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M5 10l7 7 7-7M5 21h14"/></svg>
-          Télécharger le guide (PDF)
-        </a>
-        <div class="lead-success-note">Vous pouvez à présent fermer ce message ou poursuivre la visite du site.</div>
-      </div>
     </div>
   </div>
 </section>
@@ -3426,6 +3630,9 @@ body {
             <input type="checkbox" id="rgpd" name="rgpd" required>
             <label for="rgpd">J'accepte que mes données soient traitées par BCI dans le cadre de ma demande, conformément au RGPD (politique de confidentialité accessible en pied de page). Aucune donnée n'est cédée à un tiers. Vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition et de portabilité (art. 15 à 22 RGPD).</label>
           </div>
+          <div class="form-rgpd-note on-light">
+            <strong>Information RGPD.</strong> Vos données sont collectées par l'entité BCI concernée par votre demande (B CORP INTERNATIONAL pour le conseil patrimonial, ou BCI Elec pour les travaux) pour la qualification commerciale et la prise de rendez-vous. Base légale : <strong>intérêt légitime</strong> (art. 6.1.f) ou <strong>mesures précontractuelles</strong> (art. 6.1.b). Conservation : 3 ans après dernier contact sans suite, 5 à 10 ans après fin de mission selon le statut applicable (art. L.533-10 CMF, art. L.561-12 CMF, art. L.110-4 C. com.). Droits d'accès, rectification, opposition, effacement, portabilité et limitation. Détail dans la <button type="button" class="rgpd-link" onclick="openModal('privacy')">politique de confidentialité</button>.
+          </div>
 
           <button type="submit" class="form-submit">
             Envoyer la demande
@@ -3460,7 +3667,7 @@ body {
     <div class="faq-list">
       <div class="faq-item">
         <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>Combien coûte un accompagnement BCI ?</span><span class="faq-q-icon">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">Le <strong>premier rendez-vous est gratuit</strong> et sans engagement (45 minutes). Le Diagnostic Premium fait l'objet d'un devis personnalisé, généralement compris <strong>entre 3 500 et 12 000 € HT</strong> selon la complexité du patrimoine et le nombre de dimensions à mesurer en profondeur. La supervision annuelle, si vous la choisissez, est facturée sur abonnement ou au temps passé. Tous les prix sont remis par écrit avant tout engagement, conformément aux obligations MIF2.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">L'Audit Flash est <strong>gratuit</strong>. Le Diagnostic Premium fait l'objet d'un devis personnalisé, généralement compris <strong>entre 3 500 et 12 000 € HT</strong> selon la complexité du patrimoine et le nombre de dimensions à mesurer en profondeur. La supervision annuelle, si vous la choisissez, est facturée sur abonnement ou au temps passé. Tous les prix sont remis par écrit avant tout engagement, conformément aux obligations MIF2.</div></div>
       </div>
 
       <div class="faq-item">
@@ -3485,7 +3692,7 @@ body {
 
       <div class="faq-item">
         <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>Combien de temps prend un Diagnostic Premium ?</span><span class="faq-q-icon">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">Entre <strong>deux et quatre semaines</strong> selon la complexité, depuis la signature de la convention jusqu'à la remise du rapport écrit. Le délai inclut la collecte des pièces, la mesure des 38 variables sur les cinq dimensions de la Patrimétrologie, les éventuels déplacements sur site pour la dimension physique, et la rédaction de la restitution. Vous êtes tenu informé à chaque étape par un point de situation hebdomadaire.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Entre <strong>deux et quatre semaines</strong> selon la complexité, depuis la signature de la convention jusqu'à la remise du rapport écrit. Le délai inclut la collecte des pièces, la mesure des 38 variables, les éventuels déplacements sur site pour la dimension physique, et la rédaction de la restitution. Vous êtes tenu informé à chaque étape par un point de situation hebdomadaire.</div></div>
       </div>
 
       <div class="faq-item">
@@ -3892,7 +4099,7 @@ body {
 
       <!-- ============ ÉDITER : MANIFESTE III ============ -->
       <h2>III. La méthode Ω.</h2>
-      <p>Le coefficient Ω est l'instrument central de la Patrimétrologie. 38 variables structurées par le nombre d'or (φ ≈ 1,618), réparties sur les cinq dimensions du patrimoine. Un instrument conçu pour être opposable, traçable et reproductible. Documentation méthodologique complète publiée en 2026.</p>
+      <p>Le coefficient Ω est l'instrument propriétaire de la Patrimétrologie. 38 variables auditables, cinq dimensions, un score opposable, traçable, reproductible.</p>
       <p>Ω n'est pas une opinion. C'est une métrique. Voilà ce qui le distingue des recommandations habituelles.</p>
 
       <!-- ============ ÉDITER : MANIFESTE IV ============ -->
@@ -3964,7 +4171,7 @@ body {
         <li><a href="mailto:contact@bcorpinternational.com">contact@bcorpinternational.com</a></li>
         <li><a>124 Rue du Quesne</a></li>
         <li><a>59700 Marcq-en-Barœul</a></li>
-        <li><a onclick="scrollToSection('premier-rdv')">Premier rendez-vous</a></li>
+        <li><a onclick="scrollToSection('ai')">Audit Flash IA</a></li>
         <li><a onclick="scrollToSection('contact')">Formulaire contact</a></li>
       </ul>
     </div>
@@ -4049,10 +4256,18 @@ body {
     <p>BCI accorde une importance fondamentale à la protection des données personnelles. Cette politique, conforme au <strong>Règlement Général sur la Protection des Données (RGPD) UE 2016/679</strong>, à la <strong>Loi Informatique et Libertés n°78-17</strong> modifiée, ainsi qu'aux obligations sectorielles propres aux statuts CIF, IAS, IOBSP et Hoguet, détaille comment BCI collecte, traite et protège vos données.</p>
 
     <h3>1. Identité du responsable de traitement</h3>
-    <p><strong>BCI · Patrimétrologie</strong>, SARL, représentée par Jean François Bartier en qualité de Gérant.<br>
+    <p>Deux entités juridiquement distinctes utilisent ce site et peuvent collecter vos données dans le cadre de leurs activités respectives :</p>
+    <p><strong>BCI · Patrimétrologie</strong> — nom commercial de la <strong>SARL B CORP INTERNATIONAL</strong>, représentée par Jean François Bartier en qualité de Gérant.<br>
     Siège : 124 Rue du Quesne, 59700 Marcq-en-Barœul, France<br>
-    RCS Lille Métropole 415 014 539 · TVA FR 32 415 014 539<br>
-    Courriel dédié protection des données : <strong>contact@bcorpinternational.com</strong></p>
+    RCS Lille Métropole 415 014 539 · APE 4669A<br>
+    Statuts : CIF · IAS · IOBSP (ORIAS 22006234) · Cartes T &amp; G (CPI 59062022000000081)<br>
+    Courriel protection des données : <strong>contact@bcorpinternational.com</strong></p>
+    <p><strong>BCI Elec</strong> — <strong>SARL BCI Elec</strong>, représentée par Jean François Bartier en qualité de Gérant.<br>
+    Siège : 124 Rue du Quesne, 59700 Marcq-en-Barœul, France<br>
+    SIREN 999 175 839 · APE 4321A · TVA FR64999175839<br>
+    Assurance décennale ERGO via APRIL, contrat n° 25116422343<br>
+    Courriel protection des données : <strong>contact@bcorpinternational.com</strong></p>
+    <p>Chaque entité est responsable de traitement pour les données collectées dans son périmètre d'activité. La présente politique s'applique aux deux entités ; les éventuelles particularités sont signalées dans chaque section.</p>
 
     <h3>2. Délégué à la protection des données (DPO)</h3>
     <p>La désignation d'un DPO n'est <strong>pas obligatoire</strong> au sens de l'article 37 du RGPD pour BCI compte tenu de la taille du cabinet et de l'absence de traitement à grande échelle au sens du G29 (lignes directrices WP243). Toutefois, conformément à la doctrine ACPR et à l'article L.561-32 CMF, <strong>un correspondant interne RGPD &amp; LCB-FT</strong> a été désigné : Jean François Bartier, joignable à l'adresse ci-dessus.</p>
@@ -4063,6 +4278,7 @@ body {
       <li><strong>Données d'identification</strong> : nom, prénom, date de naissance, nationalité, adresse, courriel, téléphone, copie de pièce d'identité (KYC).</li>
       <li><strong>Données patrimoniales et financières</strong> : revenus, actifs, passifs, structure familiale, statut matrimonial, régime matrimonial, structure juridique des biens, comptes bancaires, contrats d'assurance, investissements.</li>
       <li><strong>Données professionnelles</strong> : fonction, secteur d'activité, structure d'entreprise, EBITDA, capital social.</li>
+      <li><strong>Données issues de l'agent IA</strong> : questions posées, réponses fournies, score Ω indicatif calculé.</li>
       <li><strong>Données techniques</strong> : adresse IP, données de connexion, type de navigateur, pages consultées (analytique).</li>
       <li><strong>Données LCB-FT</strong> : origine des fonds, bénéficiaire effectif, exposition politique (PPE), conformément à l'article L.561-2 CMF.</li>
     </ul>
@@ -4075,12 +4291,13 @@ body {
       <li><strong>Obligations LCB-FT et KYC</strong> · Base : obligation légale (art. L.561-1 et s. CMF, IVe et Ve directives anti-blanchiment).</li>
       <li><strong>Traçabilité du conseil financier</strong> · Base : obligation légale (art. L.533-10 CMF, traçabilité 5 ans).</li>
       <li><strong>Envoi de la newsletter et lead magnets</strong> · Base : consentement explicite révocable.</li>
+      <li><strong>Audit Flash IA</strong> · Base : consentement explicite avant tout traitement.</li>
       <li><strong>Sécurité du site, prévention de la fraude</strong> · Base : intérêt légitime.</li>
     </ul>
 
     <h3>5. Décisions automatisées et profilage (art. 22 RGPD)</h3>
-    <p>À la date de publication de la présente politique, <strong>aucune décision juridique automatisée ni aucun profilage au sens de l'article 22 du RGPD n'est effectué</strong> par BCI à l'égard des utilisateurs du site. Toute analyse patrimoniale est formulée par un Patrimétrologue humain, après échange direct et étude documentaire.</p>
-    <p>Un outil d'auto-évaluation pédagogique pourra être proposé ultérieurement aux visiteurs qui en feront la demande. Cet outil sera <strong>conforme par construction</strong> au Règlement UE 2024/1689 (AI Act, catégorie « risque limité »), à l'article 22 du RGPD et à l'article L.541-1 du Code monétaire et financier. La mise en service de cet outil donnera lieu à une mise à jour préalable de la présente politique et à une information explicite des utilisateurs.</p>
+    <p>L'agent IA BCI calcule un <strong>score Ω indicatif</strong> à partir des réponses fournies. Ce score constitue un <strong>profilage</strong> au sens de l'article 4 RGPD mais <strong>ne produit aucune décision juridique automatisée</strong> à l'égard de l'utilisateur. Toute recommandation reste systématiquement formulée par un Patrimétrologue humain.</p>
+    <p>Conformément à l'article 22-1 RGPD, vous disposez d'un droit d'opposition au profilage et d'un droit d'obtenir l'intervention humaine sur toute décision. Le traitement est conforme au <strong>Règlement UE 2024/1689 (AI Act)</strong>, l'agent IA relevant de la catégorie « risque limité » imposant transparence et supervision humaine.</p>
 
     <h3>6. Durée de conservation</h3>
     <ul>
@@ -4089,6 +4306,7 @@ body {
       <li><strong>Pièces KYC et LCB-FT</strong> : 5 ans après la fin de la relation (art. L.561-12 CMF).</li>
       <li><strong>Données comptables et facturation</strong> : 10 ans (art. L.123-22 Code de commerce).</li>
       <li><strong>Données fiscales</strong> : 6 ans (art. L.102 B Livre des procédures fiscales).</li>
+      <li><strong>Logs de l'agent IA et traçabilité du conseil</strong> : 5 ans (art. L.533-10 CMF).</li>
       <li><strong>Cookies analytiques</strong> : 13 mois maximum (recommandation CNIL).</li>
       <li><strong>Newsletter</strong> : jusqu'à désinscription, puis suppression sous 30 jours.</li>
     </ul>
@@ -4099,7 +4317,15 @@ body {
       <li><strong>Autorités de contrôle</strong> sur réquisition : AMF, ACPR, DGCCRF, autorités judiciaires, administration fiscale.</li>
       <li><strong>TRACFIN</strong> (art. L.561-15 CMF) en cas de déclaration de soupçon, sans information préalable de l'intéressé conformément à l'article L.561-19 CMF.</li>
       <li><strong>Partenaires du réseau BCI</strong> (notaires, avocats, EC) <strong>uniquement</strong> dans le cadre d'une mission co-signée avec votre accord écrit préalable.</li>
-      <li><strong>Sous-traitants techniques</strong> sous contrat de sous-traitance RGPD article 28 : hébergeur du site, fournisseur de messagerie professionnelle, outil de signature électronique, plateforme de prise de rendez-vous (Calendly).</li>
+      <li><strong>Sous-traitants techniques</strong> sous contrat de sous-traitance RGPD article 28 :
+        <ul style="margin: 6px 0 0 0;">
+          <li><strong>Vercel Inc.</strong> (États-Unis) — hébergement du site, couvert par le Data Privacy Framework UE-US.</li>
+          <li><strong>OVHcloud SAS</strong> (France) — hébergement des emails professionnels, données stockées dans l'Union européenne.</li>
+          <li><strong>Brevo SAS</strong> (France) — outil de gestion des inscriptions et envoi du guide PDF, double opt-in conforme RGPD, données hébergées en UE.</li>
+          <li><strong>Calendly Inc.</strong> (États-Unis) — plateforme de prise de rendez-vous, couvert par le Data Privacy Framework UE-US.</li>
+          <li><strong>Outils internes BCI</strong> — gestionnaire de signature électronique, CRM, suite bureautique professionnelle.</li>
+        </ul>
+      </li>
       <li><strong>Compagnies d'assurance partenaires</strong> dans le cadre strict de la souscription de produits IAS, sur la base du consentement.</li>
     </ul>
 
@@ -4305,6 +4531,9 @@ body {
         <input type="checkbox" id="bookRgpd" name="rgpd" required>
         <label for="bookRgpd" style="font-size: 12px; color: var(--ash);">J'accepte que mes données soient traitées par BCI pour cette demande, conformément au RGPD. Aucune cession à un tiers.</label>
       </div>
+        <div class="form-rgpd-note on-light">
+          <strong>Information RGPD.</strong> Vos données sont collectées par BCI · Patrimétrologie pour le traitement de votre réservation. Base légale : <strong>mesures précontractuelles</strong> (art. 6.1.b RGPD). Conservation : 3 ans après livraison ou abandon de la demande. Droits d'accès, rectification, opposition, effacement, portabilité, limitation. <button type="button" class="rgpd-link" onclick="openModal('privacy')">Politique de confidentialité</button>.
+        </div>
 
       <button type="submit" class="form-submit">
         Confirmer mon intérêt
@@ -4315,6 +4544,31 @@ body {
 </div>
 
 <script>
+// V15 · Routing depuis le splash d'entrée
+function enterEntity(entity) {
+  // On retient la sélection en mémoire de session (pas obligatoire mais améliore l'UX)
+  try { sessionStorage.setItem('bci_entity', entity); } catch(e) {}
+
+  if (entity === 'elec') {
+    // Bascule vers la page Elec Particuliers
+    showPage('elec-part');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  } else {
+    // Patrimoine : on scrolle vers la section hero existante (Patrimétrologie)
+    const hero = document.querySelector('#page-home .hero');
+    if (hero) {
+      hero.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+  }
+}
+
+// Permettre de revenir au splash via clic sur le logo
+function returnToSplash() {
+  showPage('home');
+  const splash = document.getElementById('splash');
+  if (splash) splash.scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById('page-' + page);
@@ -4346,6 +4600,62 @@ function scrollToSection(id) {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   }
 }
+
+// CHAT IA
+const responses = {
+  cession: "Une cession se joue sur trois terrains. La couche physique des locaux d'abord, car la perte cachée moyenne va de 5 à 15 % de la valeur. Le montage ensuite, apport-cession ou holding selon votre horizon. La gouvernance post-cession enfin, presque toujours oubliée. Un Audit Flash en 8 questions vous donne une première estimation de votre indice Ω. Vous voulez l'essayer ?",
+  transmission: "La transmission cache plusieurs angles morts. Le démembrement croisé, rarement optimisé. Le Pacte Dutreil, qui exige des engagements précis sous peine de requalification. La gouvernance familiale écrite, presque toujours absente. L'indice Ω mesure ces points. Vous voulez lancer l'Audit Flash ?",
+  audit: "L'Audit Flash est gratuit et dure 10 minutes. 8 questions structurées pour estimer votre score Ω sur les cinq dimensions (physique, juridique, fiscale, humaine, temporelle). Vous recevez ensuite une lecture initiale. Pour aller plus loin, Jean François Bartier vous rappelle personnellement. Souhaitez-vous commencer ?",
+  immobilier: "Tout bien immobilier porte une dette technique invisible qui pèse sur sa valeur. BCI Elec réalise des audits avant-achat qui révèlent vices électriques, défauts d'isolement, non-conformité NF C 15-100. Pour le tertiaire et l'industriel, l'audit Layer-0 protège l'EBITDA. De quel type d'actif parlons-nous ?",
+  electrique: "L'audit électrique mesure l'état réel d'un actif. Impédance de boucle, continuité des terres, sélectivité des protections, conformité NF C 15-100. Pour les sites critiques : régime de neutre, onduleurs, plan de continuité. Vous souhaitez être recontacté pour une intervention sur site ?",
+  per: "Je peux vous expliquer le fonctionnement général du Plan d'Épargne Retraite (déductibilité, blocage, sortie en capital ou rente), mais je ne peux pas vous recommander un produit précis. Cette analyse relève du conseil personnalisé que seul Jean François Bartier peut formuler après étude de votre situation. Voulez-vous prendre rendez-vous ?",
+  prix: "Les tarifs varient selon la complexité de la mission. L'Audit Flash IA est gratuit. Le Diagnostic Premium démarre à partir de 3 500 € HT selon le périmètre. L'Architecture patrimoniale fait l'objet d'un mandat dédié avec honoraires sur devis. Jean François Bartier vous adressera une proposition après premier échange.",
+  livre: "Le livre fondateur 'Patrimétrologie' paraît à l'automne 2026. Vous pouvez le pré-commander dans la section Livres. Deux ouvrages techniques suivront en 2027 : 'L'indice Ω' (cahier méthodologique) et 'Patrimétrologie appliquée' (recueil de cas pratiques). Souhaitez-vous recevoir l'alerte parution ?",
+  default: "Merci pour votre message. Pour vous orienter, pouvez-vous préciser le contexte : cession d'entreprise, transmission familiale, acquisition immobilière, ou audit électrique ? Je peux aussi transmettre directement votre demande à Jean François Bartier."
+};
+
+function findResponse(msg) {
+  const lower = msg.toLowerCase();
+  if (/cession|vendre|céder|vente entreprise|pme/.test(lower)) return responses.cession;
+  if (/transmiss|héritage|enfants|succession|donation/.test(lower)) return responses.transmission;
+  if (/audit|diagnostic|évaluer|mesurer|flash/.test(lower)) return responses.audit;
+  if (/achat|acquérir|maison|appartement|immobilier|bien/.test(lower)) return responses.immobilier;
+  if (/électr|installation|tableau|panne|fibre|wifi|domotique/.test(lower)) return responses.electrique;
+  if (/per|assurance vie|épargne|retraite|placement/.test(lower)) return responses.per;
+  if (/prix|tarif|coût|honoraires|combien|payer/.test(lower)) return responses.prix;
+  if (/livre|publication|manifeste|ouvrage|parution/.test(lower)) return responses.livre;
+  return responses.default;
+}
+
+function sendMsg() {
+  const input = document.getElementById('chatInput');
+  const body = document.getElementById('chatBody');
+  if (!input.value.trim()) return;
+  const userText = input.value;
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg msg-user';
+  userMsg.textContent = userText;
+  body.appendChild(userMsg);
+  input.value = '';
+  body.scrollTop = body.scrollHeight;
+  const typing = document.createElement('div');
+  typing.className = 'msg msg-bot chat-typing';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  body.appendChild(typing);
+  body.scrollTop = body.scrollHeight;
+  setTimeout(() => {
+    typing.remove();
+    const botMsg = document.createElement('div');
+    botMsg.className = 'msg msg-bot';
+    botMsg.innerHTML = findResponse(userText);
+    body.appendChild(botMsg);
+    body.scrollTop = body.scrollHeight;
+  }, 1200);
+}
+
+document.getElementById('chatInput').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') sendMsg();
+});
 
 // Ω animated counter
 const omegaNum = document.getElementById('omegaNum');
@@ -4432,67 +4742,58 @@ function submitForm(form) {
 }
 
 // ============================================================
-// V15 — CONFIGURATION TÉLÉCHARGEMENT DU GUIDE
+// CONFIGURATION BREVO — À RENSEIGNER APRÈS CRÉATION DU FORMULAIRE
 // ============================================================
-// Architecture cible : téléchargement immédiat du PDF hébergé sur Vercel
-// dès soumission valide du formulaire. Brevo est OPTIONNEL ici.
-//
-// 1. PDF hébergé à l'URL hashée ci-dessous (non devinable, désindexé via robots.txt)
-//    Pour remplacer le PDF : commit du nouveau fichier au même chemin sur GitHub
-// 2. BREVO_FORM_URL reste défini pour activation FUTURE (mode α/β)
-//    Tant qu'il reste à la valeur par défaut, le lead n'est pas envoyé à Brevo
-//    mais le téléchargement fonctionne quand même.
-// ============================================================
-const GUIDE_PDF_URL = '/guides/4889r64jzj/guide-bci-5-angles-morts.pdf';
-const BREVO_FORM_URL = 'À_REMPLACER_PAR_URL_BREVO';  // optionnel — laisse pour plus tard
+// 1. Créer un compte sur brevo.com (gratuit)
+// 2. Créer une liste "Inscrits guide BCI"
+// 3. Créer un formulaire Brevo (Marketing > Formulaires)
+// 4. Récupérer l'URL d'action du formulaire (commence par https://xxx.sibforms.com/serve/...)
+// 5. Remplacer la valeur ci-dessous par cette URL :
+const BREVO_FORM_URL = 'À_REMPLACER_PAR_URL_BREVO';  // ⚠️ À CONFIGURER
 // ============================================================
 
 function submitLead(form) {
   if (!validateAntiSpam(form, 'lead')) return;
 
+  // Si Brevo n'est pas encore configuré, on tombe en mode mockup
+  if (BREVO_FORM_URL === 'À_REMPLACER_PAR_URL_BREVO') {
+    alert('OK - Demande enregistrée (MODE TEST).\n\nLe formulaire n\'est pas encore branché sur Brevo. Voir BCI_Branchement_Brevo.md pour la procédure.');
+    form.reset();
+    generateCaptchas();
+    return;
+  }
+
+  // Mode production : POST vers Brevo
   const email = form.querySelector('[name="email"]').value;
   const submitBtn = form.querySelector('button[type="submit"]');
-  const successBlock = document.getElementById('leadSuccess');
-  const downloadBtn  = document.getElementById('leadDownloadBtn');
-
-  // Verrouillage UI immédiat pendant traitement
   const originalText = submitBtn.innerHTML;
-  submitBtn.innerHTML = 'Préparation...';
+  submitBtn.innerHTML = 'Envoi en cours...';
   submitBtn.disabled = true;
 
-  // Fonction utilitaire : bascule UI en mode succès
-  function showSuccess() {
-    form.style.display = 'none';
-    if (successBlock) {
-      successBlock.classList.add('active');
-      // Auto-déclenchement doux du téléchargement (le bouton reste pour relance)
-      try {
-        // Cohérent UX : on ne force pas, on laisse le clic utilisateur premier
-        // mais on prépare l'attention sur le bouton
-        if (downloadBtn) downloadBtn.focus({ preventScroll: false });
-      } catch(e) { /* focus non bloquant */ }
-    }
-    // Reset technique
+  const formData = new FormData();
+  formData.append('EMAIL', email);
+  formData.append('OPT_IN', '1');
+  formData.append('email_address_check', '');  // Honeypot Brevo
+  formData.append('locale', 'fr');
+
+  fetch(BREVO_FORM_URL, {
+    method: 'POST',
+    body: formData,
+    mode: 'no-cors'  // Brevo retourne du HTML, on ignore la réponse côté client
+  })
+  .then(() => {
+    alert('Merci. Vous allez recevoir le guide PDF par courriel dans quelques minutes.\n\nSi vous ne le voyez pas, vérifiez votre dossier indésirable.');
+    form.reset();
+    generateCaptchas();
     submitBtn.innerHTML = originalText;
     submitBtn.disabled = false;
-    generateCaptchas();
-  }
-
-  // Envoi optionnel à Brevo si configuré (fire-and-forget, n'affecte pas le téléchargement)
-  if (BREVO_FORM_URL !== 'À_REMPLACER_PAR_URL_BREVO') {
-    const formData = new FormData();
-    formData.append('EMAIL', email);
-    formData.append('OPT_IN', '1');
-    formData.append('email_address_check', '');  // Honeypot Brevo
-    formData.append('locale', 'fr');
-    // no-cors : on n'attend pas la réponse, on ne dépend pas de Brevo pour le téléchargement
-    fetch(BREVO_FORM_URL, { method: 'POST', body: formData, mode: 'no-cors' })
-      .catch(err => console.warn('Brevo POST échoué (non bloquant) :', err));
-  }
-
-  // Le téléchargement est disponible immédiatement dans tous les cas (γ)
-  // Légère temporisation pour transition visuelle plus naturelle (250ms)
-  setTimeout(showSuccess, 250);
+  })
+  .catch(err => {
+    console.error('Erreur Brevo:', err);
+    alert('Désolé, une erreur est survenue. Merci de réessayer ou de nous écrire directement à contact@bcorpinternational.com.');
+    submitBtn.innerHTML = originalText;
+    submitBtn.disabled = false;
+  });
 }
 
 // V10 - Book interest form
