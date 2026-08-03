@@ -1,33 +1,38 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
-    { "source": "/notre-cabinet", "destination": "/#patrimetrologie", "permanent": true },
-    { "source": "/notre-cabinet/", "destination": "/#patrimetrologie", "permanent": true },
-    { "source": "/notre-cabinet/:path*", "destination": "/#patrimetrologie", "permanent": true },
+    { "source": "/elec", "destination": "/elec.html", "permanent": true },
+    { "source": "/electricien", "destination": "/elec.html", "permanent": true },
+    { "source": "/patrimoine", "destination": "/patrimoine.html", "permanent": true },
+    { "source": "/groupe", "destination": "/", "permanent": true },
+
+    { "source": "/notre-cabinet", "destination": "/patrimoine.html#patrimetrologie", "permanent": true },
+    { "source": "/notre-cabinet/", "destination": "/patrimoine.html#patrimetrologie", "permanent": true },
+    { "source": "/notre-cabinet/:path*", "destination": "/patrimoine.html#patrimetrologie", "permanent": true },
+
+    { "source": "/services", "destination": "/patrimoine.html#patrimetrologie", "permanent": true },
+    { "source": "/services/", "destination": "/patrimoine.html#patrimetrologie", "permanent": true },
+    { "source": "/services/:path*", "destination": "/patrimoine.html#patrimetrologie", "permanent": true },
+
+    { "source": "/a-propos", "destination": "/patrimoine.html#patrimetrologie", "permanent": true },
+    { "source": "/a-propos/", "destination": "/patrimoine.html#patrimetrologie", "permanent": true },
+    { "source": "/a-propos/:path*", "destination": "/patrimoine.html#patrimetrologie", "permanent": true },
+
+    { "source": "/blog", "destination": "/patrimoine.html#blog", "permanent": true },
+    { "source": "/blog/", "destination": "/patrimoine.html#blog", "permanent": true },
+    { "source": "/blog/:path*", "destination": "/patrimoine.html#blog", "permanent": true },
+
+    { "source": "/category", "destination": "/patrimoine.html#blog", "permanent": true },
+    { "source": "/category/", "destination": "/patrimoine.html#blog", "permanent": true },
+    { "source": "/category/:path*", "destination": "/patrimoine.html#blog", "permanent": true },
+
+    { "source": "/contact", "destination": "/patrimoine.html#contact", "permanent": true },
+    { "source": "/contact/", "destination": "/patrimoine.html#contact", "permanent": true },
+    { "source": "/contact/:path*", "destination": "/patrimoine.html#contact", "permanent": true },
 
     { "source": "/acces-prive-pro", "destination": "/", "permanent": true },
     { "source": "/acces-prive-pro/", "destination": "/", "permanent": true },
     { "source": "/acces-prive-pro/:path*", "destination": "/", "permanent": true },
-
-    { "source": "/services", "destination": "/#patrimetrologie", "permanent": true },
-    { "source": "/services/", "destination": "/#patrimetrologie", "permanent": true },
-    { "source": "/services/:path*", "destination": "/#patrimetrologie", "permanent": true },
-
-    { "source": "/blog", "destination": "/#blog", "permanent": true },
-    { "source": "/blog/", "destination": "/#blog", "permanent": true },
-    { "source": "/blog/:path*", "destination": "/#blog", "permanent": true },
-
-    { "source": "/contact", "destination": "/#contact", "permanent": true },
-    { "source": "/contact/", "destination": "/#contact", "permanent": true },
-    { "source": "/contact/:path*", "destination": "/#contact", "permanent": true },
-
-    { "source": "/a-propos", "destination": "/#patrimetrologie", "permanent": true },
-    { "source": "/a-propos/", "destination": "/#patrimetrologie", "permanent": true },
-    { "source": "/a-propos/:path*", "destination": "/#patrimetrologie", "permanent": true },
-
-    { "source": "/category", "destination": "/#blog", "permanent": true },
-    { "source": "/category/", "destination": "/#blog", "permanent": true },
-    { "source": "/category/:path*", "destination": "/#blog", "permanent": true },
 
     { "source": "/wp-admin", "destination": "/", "permanent": true },
     { "source": "/wp-admin/", "destination": "/", "permanent": true },
