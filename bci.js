@@ -41,17 +41,15 @@ function showPage(page) {
 }
 
 function scrollToSection(id) {
-  const ph = document.getElementById('page-home');
-  if (ph && !ph.classList.contains('active')) {
-    showPage('home');
-    setTimeout(() => {
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-  } else {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  var el = document.getElementById(id);
+  if (!el) { console.warn('Section absente : ' + id); return; }
+  var page = el.closest ? el.closest('.page') : null;
+  if (page && !page.classList.contains('active')) {
+    showPage(page.id.replace('page-', ''));
+    setTimeout(function () { el.scrollIntoView({ behavior: 'smooth' }); }, 130);
+    return;
   }
+  el.scrollIntoView({ behavior: 'smooth' });
 }
 
 
