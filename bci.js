@@ -141,92 +141,142 @@ function validateAntiSpam(form, captchaType) {
 }
 
 // Form submissions (with anti-spam)
-function submitForm(form) {
-  if (!validateAntiSpam(form, 'contact')) return;
-  alert('OK - Demande envoyée avec succès. Jean François Bartier vous recontactera sous 24h ouvrées.\n\n(Mockup - dans la version finale, ce formulaire enverra un email via votre intégration backend Brevo / Mailgun / SendGrid.)');
-  form.reset();
-  generateCaptchas();
+// ========== ENVOI DES DEMANDES ==========
+// Remplace le comportement de simulation de la v19, qui affichait « Demande
+// envoyee avec succes » sans rien envoyer. Allegation fausse sur un service et
+// perte silencieuse de chaque prospect.
+//
+// FORM_ENDPOINT : coller ici l'URL d'un service de formulaire (Web3Forms,
+// Formspree, Brevo...). Tant qu'elle reste vide, la demande est transmise via le
+// logiciel de messagerie du visiteur, pre-remplie : rien n'est perdu, et aucun
+// message de succes n'est affiche tant que rien n'est reellement parti.
+
+// ---------- CONFIGURATION BREVO (formulaire du guide) ----------
+// Creer le formulaire sur brevo.com, puis coller ici son URL d'action.
+// Procedure detaillee dans BCI_Branchement_Brevo.md.
+var BREVO_FORM_URL = 'A_REMPLACER_PAR_URL_BREVO';
+
+var FORM_ENDPOINT   = '';
+var DEST_PATRIMOINE = 'contact@bcorpinternational.com';
+var DEST_ELEC       = 'elec@bcorpinternational.com';
+var TEL_BCI         = '06 01 46 83 84';
+
+var LIBELLES = {
+  nom: 'Nom', prenom: 'Prenom', email: 'Courriel', telephone: 'Telephone',
+  besoin: 'Nature du besoin', delai: 'Delai souhaite', patrimoine: 'Patrimoine estime',
+  adresse: 'Adresse du chantier', message: 'Message', livre: 'Ouvrage'
+};
+
+function champsDuFormulaire(form) {
+  var out = [];
+  Array.prototype.forEach.call(form.elements, function (el) {
+    if (!el.name || el.type === 'submit' || el.type === 'checkbox') return;
+    if (el.name === 'website_url' || el.name === 'captcha') return;
+    if (!el.value) return;
+    out.push((LIBELLES[el.name] || el.name) + ' : ' + el.value);
+  });
+  return out;
 }
 
-// ============================================================
-// CONFIGURATION BREVO — À RENSEIGNER APRÈS CRÉATION DU FORMULAIRE
-// ============================================================
-// 1. Créer un compte sur brevo.com (gratuit)
-// 2. Créer une liste "Inscrits guide BCI"
-// 3. Créer un formulaire Brevo (Marketing > Formulaires)
-// 4. Récupérer l'URL d'action du formulaire (commence par https://xxx.sibforms.com/serve/...)
-// 5. Remplacer la valeur ci-dessous par cette URL :
-const BREVO_FORM_URL = 'À_REMPLACER_PAR_URL_BREVO';  // ⚠️ À CONFIGURER
-// ============================================================
+function envoyerDemande(form, destinataire, objet, type) {
+  var btn = form.querySelector('button[type="submit"]');
+  var NL = String.fromCharCode(10);
 
-function submitLead(form) {
-  if (!validateAntiSpam(form, 'lead')) return;
-
-  // Si Brevo n'est pas encore configuré, on tombe en mode mockup
-  if (BREVO_FORM_URL === 'À_REMPLACER_PAR_URL_BREVO') {
-    alert('OK - Demande enregistrée (MODE TEST).\n\nLe formulaire n\'est pas encore branché sur Brevo. Voir BCI_Branchement_Brevo.md pour la procédure.');
-    form.reset();
-    generateCaptchas();
+  if (FORM_ENDPOINT) {
+    var libelle = btn ? btn.innerHTML : '';
+    if (btn) { btn.innerHTML = 'Envoi en cours...'; btn.disabled = true; }
+    var fd = new FormData(form);
+    fd.append('_objet', objet);
+    fd.append('_destinataire', destinataire);
+    fetch(FORM_ENDPOINT, { method: 'POST', body: fd, headers: { Accept: 'application/json' } })
+      .then(function (r) {
+        if (!r.ok) { throw new Error('reponse ' + r.status); }
+        alert('Votre demande a bien ete transmise. Vous serez recontacte sous 24 heures ouvrees.');
+        form.reset();
+        generateCaptchas();
+        if (type === 'book') { closeModal('book'); }
+      })
+      .catch(function () {
+        alert("L'envoi automatique a echoue. Ecrivez-nous directement a " + destinataire
+            + ' ou appelez le ' + TEL_BCI + '.');
+      })
+      .then(function () { if (btn) { btn.innerHTML = libelle; btn.disabled = false; } });
     return;
   }
 
-  // Mode production : POST vers Brevo
-  const email = form.querySelector('[name="email"]').value;
-  const submitBtn = form.querySelector('button[type="submit"]');
-  const originalText = submitBtn.innerHTML;
-  submitBtn.innerHTML = 'Envoi en cours...';
-  submitBtn.disabled = true;
-
-  const formData = new FormData();
-  formData.append('EMAIL', email);
-  formData.append('OPT_IN', '1');
-  formData.append('email_address_check', '');  // Honeypot Brevo
-  formData.append('locale', 'fr');
-
-  fetch(BREVO_FORM_URL, {
-    method: 'POST',
-    body: formData,
-    mode: 'no-cors'  // Brevo retourne du HTML, on ignore la réponse côté client
-  })
-  .then(() => {
-    alert('Merci. Vous allez recevoir le guide PDF par courriel dans quelques minutes.\n\nSi vous ne le voyez pas, vérifiez votre dossier indésirable.');
-    form.reset();
-    generateCaptchas();
-    submitBtn.innerHTML = originalText;
-    submitBtn.disabled = false;
-  })
-  .catch(err => {
-    console.error('Erreur Brevo:', err);
-    alert('Désolé, une erreur est survenue. Merci de réessayer ou de nous écrire directement à contact@bcorpinternational.com.');
-    submitBtn.innerHTML = originalText;
-    submitBtn.disabled = false;
-  });
+  // Aucun service configure : ouverture de la messagerie du visiteur, pre-remplie.
+  var corps = champsDuFormulaire(form).join(NL) + NL + NL
+            + 'Demande transmise depuis bcorpinternational.com';
+  var lien = 'mailto:' + destinataire
+           + '?subject=' + encodeURIComponent(objet)
+           + '&body=' + encodeURIComponent(corps);
+  window.location.href = lien;
+  alert("Votre logiciel de messagerie va s'ouvrir avec votre demande pre-remplie. "
+      + "Il ne vous reste qu'a cliquer sur Envoyer. "
+      + "Si rien ne s'ouvre, ecrivez a " + destinataire + ' ou appelez le ' + TEL_BCI + '.');
 }
 
-// V10 - Book interest form
+function submitForm(form) {
+  if (!validateAntiSpam(form, 'contact')) return;
+  var elec = form.id === 'contactFormElec';
+  envoyerDemande(form,
+                 elec ? DEST_ELEC : DEST_PATRIMOINE,
+                 elec ? 'Demande de devis BCI Elec' : 'Demande de contact BCI Patrimoine et Finance',
+                 'contact');
+}
+
+function submitLead(form) {
+  if (!validateAntiSpam(form, 'lead')) return;
+  if (BREVO_FORM_URL && BREVO_FORM_URL.indexOf('REMPLACER') === -1) {
+    var email = form.querySelector('[name="email"]').value;
+    var btn = form.querySelector('button[type="submit"]');
+    var libelle = btn.innerHTML;
+    btn.innerHTML = 'Envoi en cours...';
+    btn.disabled = true;
+    var fd = new FormData();
+    fd.append('EMAIL', email);
+    fd.append('OPT_IN', '1');
+    fd.append('email_address_check', '');
+    fd.append('locale', 'fr');
+    fetch(BREVO_FORM_URL, { method: 'POST', body: fd, mode: 'no-cors' })
+      .then(function () {
+        alert('Merci. Vous allez recevoir le guide par courriel dans quelques minutes. Pensez a verifier votre dossier indesirable.');
+        form.reset();
+        generateCaptchas();
+      })
+      .catch(function () {
+        alert('Une erreur est survenue. Ecrivez-nous directement a ' + DEST_PATRIMOINE + '.');
+      })
+      .then(function () { btn.innerHTML = libelle; btn.disabled = false; });
+    return;
+  }
+  envoyerDemande(form, DEST_PATRIMOINE, 'Demande du guide BCI - 5 angles morts', 'lead');
+}
+
+// Ouverture de la modale de reservation d'ouvrage, depuis la section Livres.
 function openBookForm(livre) {
-  const titles = {
-    'manifeste': 'Pré-commander le Manifeste',
-    'indice-omega': 'Alerte parution · L\'indice Ω',
-    'cas-pratiques': 'S\'inscrire · 20 cas pratiques'
+  var titres = {
+    'manifeste':    'Pre-commander le Manifeste',
+    'indice-omega': "Alerte parution - L'indice omega",
+    'cas-pratiques': "S'inscrire - 20 cas pratiques"
   };
-  const subtitles = {
-    'manifeste': 'Réservez votre exemplaire du manifeste fondateur de la Patrimétrologie. Parution automne 2026. Envoi prioritaire aux pré-commandes.',
-    'indice-omega': 'Soyez alerté dès la parution du cahier technique de l\'indice Ω (édition 2027). Tirage limité, réservé aux praticiens.',
-    'cas-pratiques': 'Inscrivez-vous pour recevoir un extrait gratuit et être prévenu de la parution du recueil de 20 cas pratiques (édition 2027).'
+  var soustitres = {
+    'manifeste':    'Reservez votre exemplaire du manifeste fondateur de la Patrimetrologie. Parution automne 2026. Envoi prioritaire aux pre-commandes.',
+    'indice-omega': "Soyez alerte des la parution du cahier technique de l'indice omega (edition 2027). Tirage limite, reserve aux praticiens.",
+    'cas-pratiques': 'Inscrivez-vous pour recevoir un extrait gratuit et etre prevenu de la parution du recueil de 20 cas pratiques (edition 2027).'
   };
-  document.getElementById('bookModalTitle').textContent = titles[livre] || 'Réserver mon exemplaire';
-  document.getElementById('bookModalSubtitle').textContent = subtitles[livre] || '';
-  document.getElementById('bookFormLivre').value = livre;
+  var t = document.getElementById('bookModalTitle');
+  var st = document.getElementById('bookModalSubtitle');
+  var lv = document.getElementById('bookFormLivre');
+  if (t)  { t.textContent  = titres[livre] || 'Reserver mon exemplaire'; }
+  if (st) { st.textContent = soustitres[livre] || ''; }
+  if (lv) { lv.value = livre; }
   openModal('book');
 }
 
 function submitBookForm(form) {
   if (!validateAntiSpam(form, 'book')) return;
-  alert('OK - Votre intérêt est bien enregistré. Vous serez recontacté dès la parution.\n\n(Mockup - en production, intégration avec votre outil CRM / mailing.)');
-  closeModal('book');
-  form.reset();
-  generateCaptchas();
+  envoyerDemande(form, DEST_PATRIMOINE, 'Reservation d ouvrage BCI', 'book');
 }
 
 // V10 - Cookie banner
