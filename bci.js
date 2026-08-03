@@ -141,25 +141,33 @@ function validateAntiSpam(form, captchaType) {
 }
 
 // Form submissions (with anti-spam)
-// ========== ENVOI DES DEMANDES ==========
-// Remplace le comportement de simulation de la v19, qui affichait « Demande
-// envoyee avec succes » sans rien envoyer. Allegation fausse sur un service et
-// perte silencieuse de chaque prospect.
+// ========== TRAITEMENT DES FORMULAIRES ==========
+// Remplace le comportement de simulation de la v19, qui affichait
+// « Demande envoyee avec succes » sans rien envoyer.
 //
-// FORM_ENDPOINT : coller ici l'URL d'un service de formulaire (Web3Forms,
-// Formspree, Brevo...). Tant qu'elle reste vide, la demande est transmise via le
-// logiciel de messagerie du visiteur, pre-remplie : rien n'est perdu, et aucun
-// message de succes n'est affiche tant que rien n'est reellement parti.
+// Envoi reel via Web3Forms : le courriel arrive dans votre boite, mis en forme,
+// avec l'adresse du prospect en repondre-a. Aucune installation, aucun serveur.
+//
+// ---------------------------------------------------------------------------
+// A RENSEIGNER : creer une cle gratuite sur web3forms.com (une adresse courriel
+// suffit, aucune carte bancaire). Une cle par adresse de destination.
+// ---------------------------------------------------------------------------
+var CLE_PATRIMOINE = '';   // cle liee a contact@bcorpinternational.com
+var CLE_ELEC       = '';   // cle liee a elec@bcorpinternational.com
+
+// Repli si la cle correspondante n'est pas encore renseignee : la demande passe
+// par le logiciel de messagerie du visiteur. Solution d'attente, a desactiver
+// des que les cles sont en place.
+var REPLI_MESSAGERIE = true;
+
+var DEST_PATRIMOINE = 'contact@bcorpinternational.com';
+var DEST_ELEC       = 'elec@bcorpinternational.com';
+var TEL_BCI         = '06 01 46 83 84';
 
 // ---------- CONFIGURATION BREVO (formulaire du guide) ----------
 // Creer le formulaire sur brevo.com, puis coller ici son URL d'action.
 // Procedure detaillee dans BCI_Branchement_Brevo.md.
 var BREVO_FORM_URL = 'A_REMPLACER_PAR_URL_BREVO';
-
-var FORM_ENDPOINT   = '';
-var DEST_PATRIMOINE = 'contact@bcorpinternational.com';
-var DEST_ELEC       = 'elec@bcorpinternational.com';
-var TEL_BCI         = '06 01 46 83 84';
 
 var LIBELLES = {
   nom: 'Nom', prenom: 'Prenom', email: 'Courriel', telephone: 'Telephone',
@@ -170,69 +178,107 @@ var LIBELLES = {
 function champsDuFormulaire(form) {
   var out = [];
   Array.prototype.forEach.call(form.elements, function (el) {
-    if (!el.name || el.type === 'submit' || el.type === 'checkbox') return;
-    if (el.name === 'website_url' || el.name === 'captcha') return;
-    if (!el.value) return;
-    out.push((LIBELLES[el.name] || el.name) + ' : ' + el.value);
+    if (!el.name || el.type === 'submit' || el.type === 'checkbox') { return; }
+    if (el.name === 'website_url' || el.name === 'captcha') { return; }
+    if (!el.value) { return; }
+    out.push({ cle: el.name, libelle: LIBELLES[el.name] || el.name, valeur: el.value });
   });
   return out;
 }
 
-function envoyerDemande(form, destinataire, objet, type) {
-  var btn = form.querySelector('button[type="submit"]');
-  var NL = String.fromCharCode(10);
+function valeurChamp(champs, cle) {
+  for (var i = 0; i < champs.length; i++) {
+    if (champs[i].cle === cle) { return champs[i].valeur; }
+  }
+  return '';
+}
 
-  if (FORM_ENDPOINT) {
-    var libelle = btn ? btn.innerHTML : '';
+function corpsLisible(champs, entite) {
+  var NL = String.fromCharCode(10);
+  var lignes = [];
+  lignes.push('DEMANDE RECUE VIA ' + entite.toUpperCase());
+  lignes.push('Recue le ' + new Date().toLocaleString('fr-FR'));
+  lignes.push('');
+  champs.forEach(function (c) { lignes.push(c.libelle + ' : ' + c.valeur); });
+  lignes.push('');
+  lignes.push('Formulaire du site bcorpinternational.com');
+  return lignes.join(NL);
+}
+
+function envoyerDemande(form, options) {
+  var champs      = champsDuFormulaire(form);
+  var btn         = form.querySelector('button[type="submit"]');
+  var libelleBtn  = btn ? btn.innerHTML : '';
+  var nomComplet  = ((valeurChamp(champs, 'prenom') + ' ' + valeurChamp(champs, 'nom')).trim()) || 'Prospect';
+  var courriel    = valeurChamp(champs, 'email');
+  var corps       = corpsLisible(champs, options.entite);
+
+  if (options.cle) {
     if (btn) { btn.innerHTML = 'Envoi en cours...'; btn.disabled = true; }
-    var fd = new FormData(form);
-    fd.append('_objet', objet);
-    fd.append('_destinataire', destinataire);
-    fetch(FORM_ENDPOINT, { method: 'POST', body: fd, headers: { Accept: 'application/json' } })
-      .then(function (r) {
-        if (!r.ok) { throw new Error('reponse ' + r.status); }
+    var charge = {
+      access_key: options.cle,
+      subject: options.objet + ' - ' + nomComplet,
+      from_name: options.entite,
+      replyto: courriel,
+      message: corps
+    };
+    champs.forEach(function (c) { charge[c.libelle] = c.valeur; });
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(charge)
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data || data.success !== true) { throw new Error('refus du service'); }
         alert('Votre demande a bien ete transmise. Vous serez recontacte sous 24 heures ouvrees.');
         form.reset();
         generateCaptchas();
-        if (type === 'book') { closeModal('book'); }
+        if (options.type === 'book') { closeModal('book'); }
       })
       .catch(function () {
-        alert("L'envoi automatique a echoue. Ecrivez-nous directement a " + destinataire
+        alert("L'envoi automatique a echoue. Ecrivez-nous a " + options.destinataire
             + ' ou appelez le ' + TEL_BCI + '.');
       })
-      .then(function () { if (btn) { btn.innerHTML = libelle; btn.disabled = false; } });
+      .then(function () { if (btn) { btn.innerHTML = libelleBtn; btn.disabled = false; } });
     return;
   }
 
-  // Aucun service configure : ouverture de la messagerie du visiteur, pre-remplie.
-  var corps = champsDuFormulaire(form).join(NL) + NL + NL
-            + 'Demande transmise depuis bcorpinternational.com';
-  var lien = 'mailto:' + destinataire
-           + '?subject=' + encodeURIComponent(objet)
-           + '&body=' + encodeURIComponent(corps);
-  window.location.href = lien;
-  alert("Votre logiciel de messagerie va s'ouvrir avec votre demande pre-remplie. "
-      + "Il ne vous reste qu'a cliquer sur Envoyer. "
-      + "Si rien ne s'ouvre, ecrivez a " + destinataire + ' ou appelez le ' + TEL_BCI + '.');
+  if (REPLI_MESSAGERIE) {
+    window.location.href = 'mailto:' + options.destinataire
+      + '?subject=' + encodeURIComponent(options.objet + ' - ' + nomComplet)
+      + '&body=' + encodeURIComponent(corps);
+    alert("Votre logiciel de messagerie s'ouvre avec la demande pre-remplie. "
+        + "Cliquez sur Envoyer pour la transmettre. "
+        + "Si rien ne s'ouvre, ecrivez a " + options.destinataire + ' ou appelez le ' + TEL_BCI + '.');
+    return;
+  }
+
+  alert('Le formulaire est momentanement indisponible. Ecrivez-nous a '
+      + options.destinataire + ' ou appelez le ' + TEL_BCI + '.');
 }
 
 function submitForm(form) {
-  if (!validateAntiSpam(form, 'contact')) return;
+  if (!validateAntiSpam(form, 'contact')) { return; }
   var elec = form.id === 'contactFormElec';
-  envoyerDemande(form,
-                 elec ? DEST_ELEC : DEST_PATRIMOINE,
-                 elec ? 'Demande de devis BCI Elec' : 'Demande de contact BCI Patrimoine et Finance',
-                 'contact');
+  envoyerDemande(form, {
+    cle:          elec ? CLE_ELEC : CLE_PATRIMOINE,
+    destinataire: elec ? DEST_ELEC : DEST_PATRIMOINE,
+    entite:       elec ? 'BCI Elec' : 'BCI Patrimoine et Finance',
+    objet:        elec ? 'Demande de devis' : 'Demande de contact',
+    type:         'contact'
+  });
 }
 
 function submitLead(form) {
-  if (!validateAntiSpam(form, 'lead')) return;
+  if (!validateAntiSpam(form, 'lead')) { return; }
   if (BREVO_FORM_URL && BREVO_FORM_URL.indexOf('REMPLACER') === -1) {
-    var email = form.querySelector('[name="email"]').value;
-    var btn = form.querySelector('button[type="submit"]');
-    var libelle = btn.innerHTML;
+    var email  = form.querySelector('[name="email"]').value;
+    var btn    = form.querySelector('button[type="submit"]');
+    var etiq   = btn.innerHTML;
     btn.innerHTML = 'Envoi en cours...';
-    btn.disabled = true;
+    btn.disabled  = true;
     var fd = new FormData();
     fd.append('EMAIL', email);
     fd.append('OPT_IN', '1');
@@ -245,27 +291,31 @@ function submitLead(form) {
         generateCaptchas();
       })
       .catch(function () {
-        alert('Une erreur est survenue. Ecrivez-nous directement a ' + DEST_PATRIMOINE + '.');
+        alert('Une erreur est survenue. Ecrivez-nous a ' + DEST_PATRIMOINE + '.');
       })
-      .then(function () { btn.innerHTML = libelle; btn.disabled = false; });
+      .then(function () { btn.innerHTML = etiq; btn.disabled = false; });
     return;
   }
-  envoyerDemande(form, DEST_PATRIMOINE, 'Demande du guide BCI - 5 angles morts', 'lead');
+  envoyerDemande(form, {
+    cle: CLE_PATRIMOINE, destinataire: DEST_PATRIMOINE,
+    entite: 'BCI Patrimoine et Finance',
+    objet: 'Demande du guide - 5 angles morts', type: 'lead'
+  });
 }
 
 // Ouverture de la modale de reservation d'ouvrage, depuis la section Livres.
 function openBookForm(livre) {
   var titres = {
-    'manifeste':    'Pre-commander le Manifeste',
-    'indice-omega': "Alerte parution - L'indice omega",
+    'manifeste':     'Pre-commander le Manifeste',
+    'indice-omega':  "Alerte parution - L'indice omega",
     'cas-pratiques': "S'inscrire - 20 cas pratiques"
   };
   var soustitres = {
-    'manifeste':    'Reservez votre exemplaire du manifeste fondateur de la Patrimetrologie. Parution automne 2026. Envoi prioritaire aux pre-commandes.',
-    'indice-omega': "Soyez alerte des la parution du cahier technique de l'indice omega (edition 2027). Tirage limite, reserve aux praticiens.",
+    'manifeste':     'Reservez votre exemplaire du manifeste fondateur de la Patrimetrologie. Parution automne 2026. Envoi prioritaire aux pre-commandes.',
+    'indice-omega':  "Soyez alerte des la parution du cahier technique de l'indice omega (edition 2027). Tirage limite, reserve aux praticiens.",
     'cas-pratiques': 'Inscrivez-vous pour recevoir un extrait gratuit et etre prevenu de la parution du recueil de 20 cas pratiques (edition 2027).'
   };
-  var t = document.getElementById('bookModalTitle');
+  var t  = document.getElementById('bookModalTitle');
   var st = document.getElementById('bookModalSubtitle');
   var lv = document.getElementById('bookFormLivre');
   if (t)  { t.textContent  = titres[livre] || 'Reserver mon exemplaire'; }
@@ -275,8 +325,12 @@ function openBookForm(livre) {
 }
 
 function submitBookForm(form) {
-  if (!validateAntiSpam(form, 'book')) return;
-  envoyerDemande(form, DEST_PATRIMOINE, 'Reservation d ouvrage BCI', 'book');
+  if (!validateAntiSpam(form, 'book')) { return; }
+  envoyerDemande(form, {
+    cle: CLE_PATRIMOINE, destinataire: DEST_PATRIMOINE,
+    entite: 'BCI Patrimoine et Finance',
+    objet: "Reservation d'ouvrage", type: 'book'
+  });
 }
 
 // V10 - Cookie banner
